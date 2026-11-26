@@ -32,6 +32,6 @@ Missing item named (rough keyword check, `score_predictions.py`): Sonnet AMBIGUO
 - Caveats: the items were written by Claude agents and judged by Claude models (same family); n = 96 with only 10 AMBIGUOUS; one seed; the missing-item check is a rough keyword match; the judges had the rules in their prompt.
 
 ## Next
-1. Read the Sonnet NOT_PRESENT misses: label noise (another column would do) or a real miss?
+1. Fix the NOT_PRESENT rule. Finding of 2026-11-26: all 4 Sonnet misses and all 6 Haiku NOT_PRESENT -> ANSWERABLE misses are items whose dropped column is a name column (`doctor_name`, `branch_name`, `item_name`, `supplier_name`) while the table's id stays, so the judge answered with ids. 7 of the 20 NOT_PRESENT test items are such name drops (5 of 40 in train); no item with another dropped column was judged ANSWERABLE by either model. This is a label-rule gap, not only a model miss. In v0.2 never pick a pure output-name column as the dropped column when an id of the same table remains (or label such items ANSWERABLE-by-id), rebuild, and re-judge only the changed items.
 2. Qwen2.5-1.5B zero-shot and LoRA runs on pc3 (`PC3_BRIEF.md`).
 3. Hand-label 30 items for kappa.
