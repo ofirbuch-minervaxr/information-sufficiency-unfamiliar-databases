@@ -1,0 +1,191 @@
+{
+  "db_id": "flights",
+  "domain": "airline schedule and ticket bookings",
+  "tables": [
+    {
+      "name": "airports",
+      "description": "One row per airport on the airline's network.",
+      "columns": [
+        {"name": "airport_id", "type": "INTEGER", "pk": true, "doc": "Unique airport identifier."},
+        {"name": "code", "type": "TEXT", "doc": "Three-letter code printed on tickets and boarding passes."},
+        {"name": "city", "type": "TEXT", "doc": "City the airport serves."},
+        {"name": "country", "type": "TEXT", "doc": "Country where the airport is located."}
+      ],
+      "rows": [
+        [1, "LIS", "Lisbon", "Portugal"], [2, "OPO", "Porto", "Portugal"], [3, "MAD", "Madrid", "Spain"],
+        [4, "BCN", "Barcelona", "Spain"], [5, "FRA", "Frankfurt", "Germany"], [6, "LHR", "London", "United Kingdom"],
+        [7, "JFK", "New York", "United States"], [8, "ATH", "Athens", "Greece"], [9, "DXB", "Dubai", "United Arab Emirates"]
+      ]
+    },
+    {
+      "name": "aircraft",
+      "description": "One row per aircraft in the fleet.",
+      "columns": [
+        {"name": "aircraft_id", "type": "INTEGER", "pk": true, "doc": "Unique aircraft identifier."},
+        {"name": "tail", "type": "TEXT", "doc": "Registration mark painted on the aircraft."},
+        {"name": "model", "type": "TEXT", "doc": "Manufacturer and model name."},
+        {"name": "seats", "type": "INTEGER", "doc": "Number of passenger seats in the cabin layout."},
+        {"name": "max_range", "type": "INTEGER", "doc": "Longest distance the aircraft can fly with a full passenger load, in nautical miles."},
+        {"name": "flight_hours", "type": "INTEGER", "doc": "Flight hours logged since the aircraft's last major overhaul."}
+      ],
+      "rows": [
+        [1, "CS-TNA", "Airbus A320neo", 174, 3100, 3850], [2, "CS-TNB", "Airbus A321LR", 200, 3800, 4610],
+        [3, "CS-TNC", "Airbus A320neo", 174, 3100, 1940], [4, "CS-TND", "Airbus A330-900", 298, 5900, 5230],
+        [5, "CS-TNE", "Airbus A350-900", 317, 7700, 2780], [6, "CS-TNF", "Boeing 787-9", 296, 7300, 6120],
+        [7, "CS-TNG", "Embraer E195-E2", 120, 2300, 410], [8, "CS-TNH", "Boeing 777-300ER", 396, 6950, 4050]
+      ]
+    },
+    {
+      "name": "flights",
+      "description": "One row per scheduled flight departure.",
+      "columns": [
+        {"name": "flight_id", "type": "INTEGER", "pk": true, "doc": "Unique identifier of this scheduled departure."},
+        {"name": "flight_no", "type": "TEXT", "doc": "Public flight number shown on tickets, reused on later dates."},
+        {"name": "origin_id", "type": "INTEGER", "doc": "Airport the flight departs from."},
+        {"name": "dest_id", "type": "INTEGER", "doc": "Airport the flight is scheduled to land at."},
+        {"name": "aircraft_id", "type": "INTEGER", "doc": "Aircraft assigned to the flight."},
+        {"name": "departs_at", "type": "TEXT", "doc": "Scheduled departure date and time in UTC, written as YYYY-MM-DD HH:MM."},
+        {"name": "status", "type": "INTEGER", "doc": "Outcome code: 1 = landed at the planned airport, 2 = cancelled, 3 = diverted to another airport."},
+        {"name": "arr_delta", "type": "INTEGER", "doc": "Scheduled arrival time minus actual arrival time in minutes, so positive means early and negative means late; empty when the flight did not reach its planned airport."}
+      ],
+      "rows": [
+        [1, "TP1355", 1, 3, 1, "2027-01-05 06:30", 1, -12], [2, "TP0201", 1, 7, 5, "2027-01-08 10:15", 1, 14],
+        [3, "TP0204", 7, 1, 8, "2027-01-15 21:40", 1, 6], [4, "TP0482", 5, 1, 4, "2027-01-19 12:10", 2, null],
+        [5, "TP1366", 3, 1, 1, "2027-01-26 17:50", 2, null], [6, "TP1210", 1, 8, 2, "2027-02-02 07:55", 1, -22],
+        [7, "TP0363", 9, 1, 6, "2027-02-09 03:30", 1, 9], [8, "TP1301", 6, 1, 7, "2027-02-16 14:20", 1, -7],
+        [9, "TP1940", 1, 2, 3, "2027-02-23 09:05", 1, -18], [10, "TP1040", 3, 4, 1, "2027-02-26 05:15", 1, -3],
+        [11, "TP1210", 1, 8, 2, "2027-03-02 07:55", 2, null], [12, "TP1211", 8, 1, 2, "2027-03-06 04:50", 3, null]
+      ]
+    },
+    {
+      "name": "passengers",
+      "description": "One row per registered passenger.",
+      "columns": [
+        {"name": "passenger_id", "type": "INTEGER", "pk": true, "doc": "Unique passenger identifier."},
+        {"name": "name", "type": "TEXT", "doc": "Passenger full name."},
+        {"name": "nationality", "type": "TEXT", "doc": "Nationality shown on the passport."},
+        {"name": "birth_year", "type": "INTEGER", "doc": "Year of birth."},
+        {"name": "tier", "type": "INTEGER", "doc": "Loyalty programme level: 0 = not a member, 1 = silver, 2 = platinum, 3 = gold."},
+        {"name": "points", "type": "INTEGER", "doc": "Current loyalty points balance."}
+      ],
+      "rows": [
+        [1, "Marta Ferreira", "Portuguese", 1984, 1, 12300], [2, "Daniel Okafor", "Nigerian", 1991, 0, 0],
+        [3, "Helga Brandt", "German", 1958, 3, 9800], [4, "Tomas Novak", "Czech", 1975, 1, 2500],
+        [5, "Elena Rossi", "Italian", 1969, 2, 61200], [6, "Kenji Watanabe", "Japanese", 1988, 1, 3100],
+        [7, "Sofia Alvarez", "Spanish", 1996, 0, 0], [8, "Liam O'Connor", "Irish", 1953, 3, 22750],
+        [9, "Aisha Khan", "British", 1980, 1, 4900], [10, "Pedro Santos", "Brazilian", 1962, 2, 47300]
+      ]
+    },
+    {
+      "name": "bookings",
+      "description": "One row per ticket sold to a passenger for a flight.",
+      "columns": [
+        {"name": "booking_id", "type": "INTEGER", "pk": true, "doc": "Unique ticket identifier."},
+        {"name": "passenger_id", "type": "INTEGER", "doc": "Passenger the ticket was issued to."},
+        {"name": "flight_id", "type": "INTEGER", "doc": "Flight the ticket is for."},
+        {"name": "cabin", "type": "INTEGER", "doc": "Cabin booked: 1 = economy, 2 = business, 3 = premium economy."},
+        {"name": "fare", "type": "INTEGER", "doc": "Price paid for the ticket in euro cents, taxes included."},
+        {"name": "channel", "type": "INTEGER", "doc": "Sales channel code: 1 = airline website, 2 = mobile app, 3 = travel agency, 4 = call centre."},
+        {"name": "booked_on", "type": "TEXT", "doc": "Date the ticket was bought, written as YYYY-MM-DD."}
+      ],
+      "rows": [
+        [1, 1, 1, 1, 8900, 1, "2026-12-02"], [2, 6, 1, 1, 9400, 2, "2026-12-15"], [3, 2, 2, 1, 48500, 1, "2026-12-30"],
+        [4, 5, 2, 2, 189000, 3, "2026-11-20"], [5, 10, 2, 2, 176500, 3, "2026-11-28"], [6, 5, 3, 2, 182000, 3, "2026-11-20"],
+        [7, 8, 3, 3, 61000, 2, "2026-12-28"], [8, 3, 4, 3, 15600, 4, "2026-12-20"], [9, 1, 5, 1, 8200, 1, "2027-01-04"],
+        [10, 9, 6, 1, 12900, 3, "2027-01-10"], [11, 3, 7, 2, 98000, 1, "2027-01-18"], [12, 1, 11, 1, 13400, 1, "2027-02-14"]
+      ]
+    }
+  ],
+  "foreign_keys": [
+    ["flights.origin_id", "airports.airport_id"], ["flights.dest_id", "airports.airport_id"],
+    ["flights.aircraft_id", "aircraft.aircraft_id"], ["bookings.passenger_id", "passengers.passenger_id"],
+    ["bookings.flight_id", "flights.flight_id"]
+  ],
+  "questions": [
+    {"id": "q01", "text": "Which cities in Spain are on our network?",
+     "sql": "SELECT city FROM airports WHERE country = 'Spain'",
+     "needs_columns": ["airports.city", "airports.country"], "needs_docs": []},
+    {"id": "q02", "text": "How many flights did we have to cancel in January?",
+     "sql": "SELECT COUNT(*) FROM flights WHERE status = 2 AND departs_at LIKE '2027-01%'",
+     "needs_columns": ["flights.status", "flights.departs_at"],
+     "needs_docs": [{"column": "flights.status", "fact": "code 2 means the flight was cancelled"}]},
+    {"id": "q03", "text": "What was our ticket revenue on flights to New York, in euros?",
+     "sql": "SELECT SUM(b.fare) / 100.0 FROM bookings b JOIN flights f ON f.flight_id = b.flight_id JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'New York'",
+     "needs_columns": ["bookings.fare", "airports.city"],
+     "needs_docs": [{"column": "bookings.fare", "fact": "fares are in euro cents, so divide by 100 to get euros"}]},
+    {"id": "q04", "text": "Which of our aircraft can fly more than 12,000 kilometres non-stop?",
+     "sql": "SELECT tail FROM aircraft WHERE max_range * 1.852 > 12000",
+     "needs_columns": ["aircraft.tail", "aircraft.max_range"],
+     "needs_docs": [{"column": "aircraft.max_range", "fact": "range is in nautical miles, so multiply by 1.852 to get kilometres"}]},
+    {"id": "q05", "text": "Give me the names of passengers who have travelled in business class.",
+     "sql": "SELECT DISTINCT p.name FROM passengers p JOIN bookings b ON b.passenger_id = p.passenger_id WHERE b.cabin = 2",
+     "needs_columns": ["passengers.name", "bookings.cabin"],
+     "needs_docs": [{"column": "bookings.cabin", "fact": "code 2 means business class (1 is economy, 3 is premium economy)"}]},
+    {"id": "q06", "text": "Who are our platinum members?",
+     "sql": "SELECT name FROM passengers WHERE tier = 2",
+     "needs_columns": ["passengers.name", "passengers.tier"],
+     "needs_docs": [{"column": "passengers.tier", "fact": "level 2 is platinum (1 is silver, 3 is gold)"}]},
+    {"id": "q07", "text": "Which planes have flown more than 4,000 hours since their last overhaul?",
+     "sql": "SELECT tail FROM aircraft WHERE flight_hours > 4000",
+     "needs_columns": ["aircraft.tail", "aircraft.flight_hours"],
+     "needs_docs": [{"column": "aircraft.flight_hours", "fact": "the hours count only the time since the last major overhaul, not the aircraft's whole life"}]},
+    {"id": "q08", "text": "On how many flights did we land later than scheduled?",
+     "sql": "SELECT COUNT(*) FROM flights WHERE arr_delta < 0",
+     "needs_columns": ["flights.arr_delta"],
+     "needs_docs": [{"column": "flights.arr_delta", "fact": "the value is scheduled minus actual arrival in minutes, so a negative value means the flight arrived late"}]},
+    {"id": "q09", "text": "Tell me how many tickets were sold through travel agencies.",
+     "sql": "SELECT COUNT(*) FROM bookings WHERE channel = 3",
+     "needs_columns": ["bookings.channel"],
+     "needs_docs": [{"column": "bookings.channel", "fact": "code 3 means the ticket was sold by a travel agency"}]},
+    {"id": "q10", "text": "Which passengers hold a ticket from Lisbon to New York?",
+     "sql": "SELECT DISTINCT p.name FROM passengers p JOIN bookings b ON b.passenger_id = p.passenger_id JOIN flights f ON f.flight_id = b.flight_id JOIN airports o ON o.airport_id = f.origin_id JOIN airports d ON d.airport_id = f.dest_id WHERE o.city = 'Lisbon' AND d.city = 'New York'",
+     "needs_columns": ["passengers.name", "airports.city"], "needs_docs": []}
+  ],
+  "ambiguous": [
+    {"id": "a01", "text": "Which route is the busiest?",
+     "readings": [
+       {"gloss": "most scheduled flights",
+        "sql": "SELECT o.code || '-' || d.code FROM flights f JOIN airports o ON o.airport_id = f.origin_id JOIN airports d ON d.airport_id = f.dest_id GROUP BY f.origin_id, f.dest_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most tickets sold",
+        "sql": "SELECT o.code || '-' || d.code FROM bookings b JOIN flights f ON f.flight_id = b.flight_id JOIN airports o ON o.airport_id = f.origin_id JOIN airports d ON d.airport_id = f.dest_id GROUP BY f.origin_id, f.dest_id ORDER BY COUNT(*) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["airports.code", "flights.origin_id", "flights.dest_id"],
+     "resolving_note": {"table": "flights", "text": "Unless stated otherwise, the busiest route is the one with the most scheduled flights."}},
+    {"id": "a02", "text": "How many passengers are booked on our January flights?",
+     "readings": [
+       {"gloss": "each person counted once",
+        "sql": "SELECT COUNT(DISTINCT b.passenger_id) FROM bookings b JOIN flights f ON f.flight_id = b.flight_id WHERE f.departs_at LIKE '2027-01%'"},
+       {"gloss": "every ticket counted",
+        "sql": "SELECT COUNT(*) FROM bookings b JOIN flights f ON f.flight_id = b.flight_id WHERE f.departs_at LIKE '2027-01%'"}
+     ],
+     "needs_columns": ["bookings.passenger_id", "flights.departs_at"],
+     "resolving_note": {"table": "bookings", "text": "Unless stated otherwise, passengers are counted as people, so someone holding several tickets counts once."}},
+    {"id": "a03", "text": "What does a ticket to Madrid cost?",
+     "readings": [
+       {"gloss": "average fare in euros",
+        "sql": "SELECT AVG(b.fare) / 100.0 FROM bookings b JOIN flights f ON f.flight_id = b.flight_id JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'Madrid'"},
+       {"gloss": "cheapest fare in euros",
+        "sql": "SELECT MIN(b.fare) / 100.0 FROM bookings b JOIN flights f ON f.flight_id = b.flight_id JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'Madrid'"}
+     ],
+     "needs_columns": ["bookings.fare", "airports.city"],
+     "resolving_note": {"table": "bookings", "text": "Unless stated otherwise, what a ticket costs means the average fare paid."}},
+    {"id": "a04", "text": "When was our most recent flight to Athens?",
+     "readings": [
+       {"gloss": "latest flight that was not cancelled",
+        "sql": "SELECT MAX(f.departs_at) FROM flights f JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'Athens' AND f.status <> 2"},
+       {"gloss": "latest scheduled flight, cancelled or not",
+        "sql": "SELECT MAX(f.departs_at) FROM flights f JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'Athens'"}
+     ],
+     "needs_columns": ["flights.departs_at", "flights.status", "airports.city"],
+     "resolving_note": {"table": "flights", "text": "Unless stated otherwise, a cancelled flight does not count as a flight that took place."}},
+    {"id": "a05", "text": "Who is our most loyal passenger?",
+     "readings": [
+       {"gloss": "highest loyalty points balance",
+        "sql": "SELECT name FROM passengers ORDER BY points DESC LIMIT 1"},
+       {"gloss": "most tickets bought",
+        "sql": "SELECT p.name FROM passengers p JOIN bookings b ON b.passenger_id = p.passenger_id GROUP BY p.passenger_id ORDER BY COUNT(*) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["passengers.name", "passengers.points"],
+     "resolving_note": {"table": "passengers", "text": "Unless stated otherwise, the most loyal passenger is the one with the highest loyalty points balance."}}
+  ]
+}

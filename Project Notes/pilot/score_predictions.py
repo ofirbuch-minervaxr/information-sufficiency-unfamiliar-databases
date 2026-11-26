@@ -7,9 +7,11 @@ Missing-information check is rough: does the text mention the removed column (or
 import collections
 import json
 import re
+import os
 import sys
 
-import metrics
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # python -I does not add the script folder
+import metrics  # noqa: E402
 
 
 def words(s, n=4):

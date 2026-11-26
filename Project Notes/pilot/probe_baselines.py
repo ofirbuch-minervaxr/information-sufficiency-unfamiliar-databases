@@ -9,9 +9,11 @@ import collections
 import json
 import math
 import re
+import os
 import sys
 
-import metrics
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # python -I does not add the script folder
+import metrics  # noqa: E402
 
 
 def toks(s):

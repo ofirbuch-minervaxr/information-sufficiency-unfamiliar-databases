@@ -101,11 +101,11 @@ def main():
     ap.add_argument("--seed", type=int, default=7)
     args = ap.parse_args()
     test_dbs = {x for x in args.test_dbs.split(",") if x}
-    rng = random.Random(args.seed)
     rows = []
     for path in sorted(glob.glob(os.path.join(args.specs, "*.json"))):
         with open(path, encoding="utf-8") as f:
             spec = json.load(f)
+        rng = random.Random(f"{args.seed}:{spec['db_id']}")  # per-database seed: adding a database never changes the others
         rows += build(spec, "test" if spec["db_id"] in test_dbs else "train", rng)
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:

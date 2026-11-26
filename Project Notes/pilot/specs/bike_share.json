@@ -1,0 +1,195 @@
+{
+  "db_id": "bike_share",
+  "domain": "city bike-sharing system",
+  "tables": [
+    {
+      "name": "stations",
+      "description": "Docking stations where riders pick up and return bikes.",
+      "columns": [
+        {"name": "station_id", "type": "INTEGER", "pk": true, "doc": "Unique station identifier."},
+        {"name": "station_name", "type": "TEXT", "doc": "Public name of the station."},
+        {"name": "precinct", "type": "TEXT", "doc": "City precinct the station sits in."},
+        {"name": "docks", "type": "INTEGER", "doc": "Number of docking points installed at the station."},
+        {"name": "status", "type": "INTEGER", "doc": "Operating state code: 1 = under construction, 2 = open and in service, 3 = temporarily suspended, 4 = permanently closed."}
+      ],
+      "rows": [
+        [1, "Riverside Plaza", "Riverside", 24, 3], [2, "Central Library", "Central", 30, 2],
+        [3, "Ferry Wharf", "Riverside", 16, 4], [4, "University Gate", "Campus", 20, 2],
+        [5, "Botanic Gardens", "Parklands", 14, 2], [6, "Market Square", "Central", 28, 2],
+        [7, "Town Hall", "Central", 36, 2], [8, "Stadium Road", "Southside", 18, 3],
+        [9, "Railway Station North", "Central", 40, 2], [10, "Science Park", "Campus", 12, 1]
+      ]
+    },
+    {
+      "name": "bikes",
+      "description": "The fleet of rental bikes.",
+      "columns": [
+        {"name": "bike_id", "type": "INTEGER", "pk": true, "doc": "Unique bike identifier."},
+        {"name": "fleet_tag", "type": "TEXT", "doc": "Fleet number printed on the bike frame."},
+        {"name": "kind", "type": "INTEGER", "doc": "Bike category code: 1 = standard pedal bike, 2 = electric-assist bike, 3 = cargo bike."},
+        {"name": "in_fleet_since", "type": "TEXT", "doc": "Date the bike joined the fleet, YYYY-MM-DD."},
+        {"name": "odometer", "type": "REAL", "doc": "Kilometres ridden since the bike's last depot service; reset to zero at every service."}
+      ],
+      "rows": [
+        [1, "CB-2041", 2, "2025-03-10", 212.4], [2, "CB-2043", 1, "2024-06-01", 540.7],
+        [3, "CB-2047", 3, "2025-09-15", 96.0], [4, "CB-2052", 1, "2024-06-01", 388.2],
+        [5, "CB-2058", 2, "2025-03-10", 455.9], [6, "CB-2061", 1, "2024-08-20", 120.5],
+        [7, "CB-2066", 2, "2025-11-02", 61.3], [8, "CB-2070", 1, "2024-08-20", 610.0],
+        [9, "CB-2075", 2, "2025-03-10", 502.8], [10, "CB-2079", 1, "2025-01-18", 305.6]
+      ]
+    },
+    {
+      "name": "members",
+      "description": "Registered riders of the scheme.",
+      "columns": [
+        {"name": "member_id", "type": "INTEGER", "pk": true, "doc": "Unique member identifier."},
+        {"name": "full_name", "type": "TEXT", "doc": "Member's full name."},
+        {"name": "suburb", "type": "TEXT", "doc": "Suburb where the member lives."},
+        {"name": "plan", "type": "INTEGER", "doc": "Subscription code: 1 = pay-per-ride, 2 = monthly pass, 3 = annual pass, 4 = student concession."},
+        {"name": "joined_on", "type": "TEXT", "doc": "Date the member signed up, YYYY-MM-DD."}
+      ],
+      "rows": [
+        [1, "Priya Nair", "Northfield", 3, "2024-07-14"], [2, "Tom Whitfield", "Eastfield", 1, "2025-01-09"],
+        [3, "Amara Okafor", "Westbrook", 2, "2025-02-21"], [4, "Luca Ferrari", "Northfield", 4, "2025-03-30"],
+        [5, "Mei Lin Zhou", "Hillcrest", 3, "2024-09-02"], [6, "Jack Donnelly", "Lakeside", 1, "2025-06-17"],
+        [7, "Sofia Marquez", "Eastfield", 3, "2025-08-05"], [8, "Ben Hartley", "Hillcrest", 1, "2025-11-23"],
+        [9, "Yuki Tanaka", "Westbrook", 2, "2026-01-12"], [10, "Hannah Doyle", "Lakeside", 4, "2026-02-03"]
+      ]
+    },
+    {
+      "name": "trips",
+      "description": "Completed rentals, one per ride from unlock to return.",
+      "columns": [
+        {"name": "trip_id", "type": "INTEGER", "pk": true, "doc": "Unique trip identifier."},
+        {"name": "member_id", "type": "INTEGER", "doc": "The member who took the trip."},
+        {"name": "bike_id", "type": "INTEGER", "doc": "The bike that was used."},
+        {"name": "start_station_id", "type": "INTEGER", "doc": "Station where the bike was unlocked."},
+        {"name": "end_station_id", "type": "INTEGER", "doc": "Station where the bike was returned."},
+        {"name": "started_at", "type": "TEXT", "doc": "Moment the trip began, as YYYY-MM-DD HH:MM:SS in UTC; the city's local time is UTC-5."},
+        {"name": "duration", "type": "INTEGER", "doc": "Length of the ride in whole minutes."},
+        {"name": "fare", "type": "INTEGER", "doc": "Amount charged for the trip in ride credits; one credit is worth 50 cents."}
+      ],
+      "rows": [
+        [1, 5, 1, 9, 7, "2026-02-23 12:35:00", 22, 9], [2, 2, 2, 7, 9, "2026-02-23 22:50:00", 33, 13],
+        [3, 1, 5, 9, 7, "2026-02-24 13:20:00", 14, 7], [4, 7, 3, 5, 2, "2026-02-24 17:40:00", 44, 18],
+        [5, 5, 1, 9, 7, "2026-02-25 11:55:00", 17, 8], [6, 5, 1, 7, 9, "2026-02-26 23:10:00", 26, 13],
+        [7, 1, 7, 9, 4, "2026-02-27 12:15:00", 13, 6], [8, 6, 2, 1, 3, "2026-02-28 15:30:00", 62, 25],
+        [9, 8, 6, 5, 5, "2026-03-01 14:05:00", 38, 15], [10, 1, 8, 6, 9, "2026-03-02 12:45:00", 15, 7],
+        [11, 4, 4, 2, 6, "2026-03-03 21:25:00", 29, 12], [12, 1, 10, 9, 7, "2026-03-04 12:05:00", 10, 5]
+      ]
+    },
+    {
+      "name": "maintenance",
+      "description": "Repair jobs logged by the workshop.",
+      "columns": [
+        {"name": "job_id", "type": "INTEGER", "pk": true, "doc": "Unique repair job identifier."},
+        {"name": "bike_id", "type": "INTEGER", "doc": "The bike that was repaired."},
+        {"name": "category", "type": "INTEGER", "doc": "Repair type code: 1 = tire or puncture, 2 = brakes, 3 = battery or motor, 4 = chain or gears, 5 = frame or crash damage."},
+        {"name": "reported_on", "type": "TEXT", "doc": "Date the fault was reported, YYYY-MM-DD."},
+        {"name": "fixed_on", "type": "TEXT", "doc": "Date the repair was completed, YYYY-MM-DD."},
+        {"name": "cost", "type": "REAL", "doc": "Total cost of the job, labour and parts, in Canadian dollars."}
+      ],
+      "rows": [
+        [1, 2, 1, "2025-11-04", "2025-11-05", 18.5], [2, 5, 4, "2025-12-12", "2025-12-13", 35.0],
+        [3, 2, 2, "2025-12-29", "2026-01-03", 96.0], [4, 1, 3, "2026-01-06", "2026-01-14", 240.0],
+        [5, 4, 1, "2026-01-15", "2026-01-15", 22.0], [6, 9, 2, "2026-01-27", "2026-02-02", 58.0],
+        [7, 3, 5, "2026-02-03", "2026-02-20", 410.0], [8, 2, 4, "2026-02-10", "2026-02-11", 29.5],
+        [9, 7, 3, "2026-02-24", "2026-03-04", 185.0], [10, 10, 2, "2026-03-02", "2026-03-02", 41.0]
+      ]
+    }
+  ],
+  "foreign_keys": [
+    ["trips.member_id", "members.member_id"],
+    ["trips.bike_id", "bikes.bike_id"],
+    ["trips.start_station_id", "stations.station_id"],
+    ["trips.end_station_id", "stations.station_id"],
+    ["maintenance.bike_id", "bikes.bike_id"]
+  ],
+  "questions": [
+    {"id": "q01", "text": "Which station can hold the most bikes?",
+     "sql": "SELECT station_name FROM stations ORDER BY docks DESC LIMIT 1",
+     "needs_columns": ["stations.station_name", "stations.docks"], "needs_docs": []},
+    {"id": "q02", "text": "Right now, how many stations are open for business?",
+     "sql": "SELECT COUNT(*) FROM stations WHERE status = 2",
+     "needs_columns": ["stations.status"],
+     "needs_docs": [{"column": "stations.status", "fact": "code 2 means the station is open and in service"}]},
+    {"id": "q03", "text": "Tell me how many rides began before 8 in the morning.",
+     "sql": "SELECT COUNT(*) FROM trips WHERE strftime('%H', started_at, '-5 hours') < '08'",
+     "needs_columns": ["trips.started_at"],
+     "needs_docs": [{"column": "trips.started_at", "fact": "start times are stored in UTC and the city's local time is 5 hours behind (UTC-5)"}]},
+    {"id": "q04", "text": "Give me the number of electric bikes in the fleet.",
+     "sql": "SELECT COUNT(*) FROM bikes WHERE kind = 2",
+     "needs_columns": ["bikes.kind"],
+     "needs_docs": [{"column": "bikes.kind", "fact": "code 2 means an electric-assist bike"}]},
+    {"id": "q05", "text": "In Canadian dollars, what is the total repair bill so far?",
+     "sql": "SELECT SUM(cost) FROM maintenance",
+     "needs_columns": ["maintenance.cost"],
+     "needs_docs": [{"column": "maintenance.cost", "fact": "job costs are recorded in Canadian dollars"}]},
+    {"id": "q06", "text": "Altogether, how many dollars did riders pay in fares?",
+     "sql": "SELECT SUM(fare) * 0.5 FROM trips",
+     "needs_columns": ["trips.fare"],
+     "needs_docs": [{"column": "trips.fare", "fact": "fares are counted in ride credits and each credit is worth 50 cents, so dollars = credits x 0.5"}]},
+    {"id": "q07", "text": "List the riders who hold an annual pass.",
+     "sql": "SELECT full_name FROM members WHERE plan = 3 ORDER BY full_name",
+     "needs_columns": ["members.full_name", "members.plan"],
+     "needs_docs": [{"column": "members.plan", "fact": "code 3 means an annual pass"}]},
+    {"id": "q08", "text": "Show me the bikes that have covered more than 500 km since their last service.",
+     "sql": "SELECT fleet_tag FROM bikes WHERE odometer > 500 ORDER BY fleet_tag",
+     "needs_columns": ["bikes.fleet_tag", "bikes.odometer"],
+     "needs_docs": [{"column": "bikes.odometer", "fact": "odometer is kilometres ridden since the last service and resets to zero at each service, not lifetime distance"}]},
+    {"id": "q09", "text": "How many repair jobs were logged for brake problems?",
+     "sql": "SELECT COUNT(*) FROM maintenance WHERE category = 2",
+     "needs_columns": ["maintenance.category"],
+     "needs_docs": [{"column": "maintenance.category", "fact": "code 2 means a brake repair"}]},
+    {"id": "q10", "text": "Who signed up during 2025?",
+     "sql": "SELECT full_name FROM members WHERE joined_on LIKE '2025%' ORDER BY full_name",
+     "needs_columns": ["members.full_name", "members.joined_on"], "needs_docs": []}
+  ],
+  "ambiguous": [
+    {"id": "a01", "text": "Which station is the busiest?",
+     "readings": [
+       {"gloss": "most trips starting there",
+        "sql": "SELECT s.station_name FROM stations s JOIN trips t ON t.start_station_id = s.station_id GROUP BY s.station_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most trips ending there",
+        "sql": "SELECT s.station_name FROM stations s JOIN trips t ON t.end_station_id = s.station_id GROUP BY s.station_id ORDER BY COUNT(*) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["stations.station_name", "trips.start_station_id", "trips.end_station_id"],
+     "resolving_note": {"table": "stations", "text": "Station busyness is measured by how many trips depart from it."}},
+    {"id": "a02", "text": "Who is our best member?",
+     "readings": [
+       {"gloss": "most trips taken",
+        "sql": "SELECT m.full_name FROM members m JOIN trips t ON t.member_id = m.member_id GROUP BY m.member_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "highest total fares paid",
+        "sql": "SELECT m.full_name FROM members m JOIN trips t ON t.member_id = m.member_id GROUP BY m.member_id ORDER BY SUM(t.fare) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["members.full_name", "trips.member_id", "trips.fare"],
+     "resolving_note": {"table": "members", "text": "When we call a member the best, we mean the rider with the largest number of trips."}},
+    {"id": "a03", "text": "How much did repairs cost us in January?",
+     "readings": [
+       {"gloss": "jobs reported in January",
+        "sql": "SELECT SUM(cost) FROM maintenance WHERE reported_on >= '2026-01-01' AND reported_on < '2026-02-01'"},
+       {"gloss": "jobs completed in January",
+        "sql": "SELECT SUM(cost) FROM maintenance WHERE fixed_on >= '2026-01-01' AND fixed_on < '2026-02-01'"}
+     ],
+     "needs_columns": ["maintenance.cost", "maintenance.reported_on", "maintenance.fixed_on"],
+     "resolving_note": {"table": "maintenance", "text": "Repair spending is booked to the month in which the fault was first reported."}},
+    {"id": "a04", "text": "How long is a typical ride?",
+     "readings": [
+       {"gloss": "average duration",
+        "sql": "SELECT AVG(duration) FROM trips"},
+       {"gloss": "median duration",
+        "sql": "SELECT AVG(duration) FROM (SELECT duration FROM trips ORDER BY duration LIMIT 2 - (SELECT COUNT(*) FROM trips) % 2 OFFSET (SELECT (COUNT(*) - 1) / 2 FROM trips))"}
+     ],
+     "needs_columns": ["trips.duration"],
+     "resolving_note": {"table": "trips", "text": "The usual way to describe a typical ride is the mean duration across all trips."}},
+    {"id": "a05", "text": "Which bike is in the worst shape?",
+     "readings": [
+       {"gloss": "most repair jobs on record",
+        "sql": "SELECT b.fleet_tag FROM bikes b JOIN maintenance m ON m.bike_id = b.bike_id GROUP BY b.bike_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most kilometres since last service",
+        "sql": "SELECT fleet_tag FROM bikes ORDER BY odometer DESC LIMIT 1"}
+     ],
+     "needs_columns": ["bikes.fleet_tag", "maintenance.bike_id", "bikes.odometer"],
+     "resolving_note": {"table": "bikes", "text": "A bike's condition is judged mainly by how many repair jobs it has needed."}}
+  ]
+}

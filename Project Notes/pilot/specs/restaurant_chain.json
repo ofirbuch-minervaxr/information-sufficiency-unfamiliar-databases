@@ -1,0 +1,240 @@
+{
+  "db_id": "restaurant_chain",
+  "domain": "restaurant chain operations",
+  "tables": [
+    {
+      "name": "branches",
+      "description": "Each row is a restaurant outlet or kitchen operated by the chain.",
+      "columns": [
+        {"name": "branch_id", "type": "INTEGER", "pk": true, "doc": "Numeric ID of the branch."},
+        {"name": "branch_name", "type": "TEXT", "doc": "Name of the branch, usually the neighbourhood it serves."},
+        {"name": "format", "type": "INTEGER", "doc": "Outlet format code: 1 = full-service restaurant, 2 = food-court stall, 3 = delivery-only kitchen."},
+        {"name": "seats", "type": "INTEGER", "doc": "Number of customer seats at the branch."},
+        {"name": "opened_on", "type": "TEXT", "doc": "Date the branch opened, written as YYYY-MM-DD."}
+      ],
+      "rows": [
+        [1, "Orchard", 1, 96, "2018-05-14"],
+        [2, "Bugis", 1, 72, "2019-09-02"],
+        [3, "Tampines", 2, 28, "2020-02-17"],
+        [4, "Jurong East", 1, 110, "2021-08-23"],
+        [5, "Woodlands", 3, 0, "2022-11-07"],
+        [6, "Changi Airport", 2, 34, "2023-04-10"],
+        [7, "Marina Bay", 1, 64, "2024-01-15"],
+        [8, "Punggol", 3, 0, "2025-06-30"]
+      ]
+    },
+    {
+      "name": "suppliers",
+      "description": "Each row is an ingredient supplier used by the chain.",
+      "columns": [
+        {"name": "supplier_id", "type": "INTEGER", "pk": true, "doc": "Numeric ID of the supplier."},
+        {"name": "supplier_name", "type": "TEXT", "doc": "Trading name of the supplier."},
+        {"name": "product_line", "type": "TEXT", "doc": "Main kind of goods the supplier provides."},
+        {"name": "lead_time", "type": "INTEGER", "doc": "Typical delivery lead time from placing an order to arrival, counted in working days (Monday to Friday)."},
+        {"name": "reliability", "type": "REAL", "doc": "Percentage of the supplier's deliveries over the past year that arrived on or before the promised date."}
+      ],
+      "rows": [
+        [1, "Kampung Poultry Farm", "Poultry", 2, 96.0],
+        [2, "Ocean Harvest Seafood", "Seafood", 3, 88.0],
+        [3, "Green Valley Produce", "Vegetables", 1, 94.0],
+        [4, "Golden Wok Noodles", "Noodles and rice", 5, 91.0],
+        [5, "Spice Route Trading", "Spices and sauces", 7, 97.0],
+        [6, "Island Beverages", "Drinks", 4, 82.0],
+        [7, "Pacific Dairy Co.", "Dairy", 6, 99.0],
+        [8, "Prime Meats", "Pork and beef", 9, 93.0]
+      ]
+    },
+    {
+      "name": "menu_items",
+      "description": "Each row is a dish or drink on the menu.",
+      "columns": [
+        {"name": "item_id", "type": "INTEGER", "pk": true, "doc": "Numeric ID of the menu item."},
+        {"name": "item_name", "type": "TEXT", "doc": "Name of the dish or drink as printed on the menu."},
+        {"name": "price", "type": "REAL", "doc": "Menu price per serving in Singapore dollars, with 9% GST already included."},
+        {"name": "allergens", "type": "INTEGER", "doc": "Allergen flags added together: 1 = peanuts, 2 = shellfish, 4 = dairy, 8 = gluten, and 0 when none of these apply."},
+        {"name": "supplier_id", "type": "INTEGER", "doc": "Supplier of the dish's main ingredient."}
+      ],
+      "rows": [
+        [1, "Hainanese Chicken Rice", 7.90, 8, 1],
+        [2, "Chendol", 4.80, 0, 5],
+        [3, "Bak Kut Teh", 10.90, 8, 8],
+        [4, "Chilli Crab", 54.50, 10, 2],
+        [5, "Laksa", 8.90, 2, 4],
+        [6, "Char Kway Teow", 8.50, 10, 4],
+        [7, "Satay Skewers", 12.00, 1, 1],
+        [8, "Teh Tarik", 3.50, 4, 6],
+        [9, "Roti Prata", 4.50, 12, 7],
+        [10, "Fried Carrot Cake", 6.50, 8, 3]
+      ]
+    },
+    {
+      "name": "orders",
+      "description": "Each row is a customer order taken at a branch.",
+      "columns": [
+        {"name": "order_id", "type": "INTEGER", "pk": true, "doc": "Numeric ID of the order."},
+        {"name": "branch_id", "type": "INTEGER", "doc": "Branch that took the order."},
+        {"name": "channel", "type": "INTEGER", "doc": "Order channel code: 1 = dine-in, 2 = takeaway at the counter, 3 = third-party delivery platform, 4 = the chain's own website or app."},
+        {"name": "placed_at", "type": "TEXT", "doc": "Time the order was placed, in UTC and written as YYYY-MM-DD HH:MM, while the branches keep Singapore time, which is UTC+8."}
+      ],
+      "rows": [
+        [1001, 1, 2, "2026-03-06 04:20"],
+        [1002, 2, 1, "2026-03-06 11:35"],
+        [1003, 1, 3, "2026-03-06 14:10"],
+        [1004, 5, 4, "2026-03-07 05:45"],
+        [1005, 2, 1, "2026-03-07 12:30"],
+        [1006, 1, 2, "2026-03-07 13:05"],
+        [1007, 8, 4, "2026-03-08 03:50"],
+        [1008, 4, 3, "2026-03-08 09:15"],
+        [1009, 7, 1, "2026-03-08 14:40"]
+      ]
+    },
+    {
+      "name": "order_lines",
+      "description": "Each row is a menu item ordered within an order.",
+      "columns": [
+        {"name": "line_id", "type": "INTEGER", "pk": true, "doc": "Numeric ID of the order line."},
+        {"name": "order_id", "type": "INTEGER", "doc": "Order the line belongs to."},
+        {"name": "item_id", "type": "INTEGER", "doc": "Menu item that was ordered."},
+        {"name": "qty", "type": "INTEGER", "doc": "Number of servings of the item on the line."},
+        {"name": "discount", "type": "REAL", "doc": "Discount given on the line as an amount in Singapore dollars taken off the line total, not a percentage."}
+      ],
+      "rows": [
+        [1, 1001, 1, 1, 0.0],
+        [2, 1002, 4, 3, 0.0],
+        [3, 1002, 8, 6, 0.0],
+        [4, 1003, 5, 2, 1.5],
+        [5, 1004, 6, 2, 2.0],
+        [6, 1004, 3, 1, 0.0],
+        [7, 1004, 2, 2, 1.5],
+        [8, 1005, 7, 8, 4.0],
+        [9, 1006, 9, 2, 0.0],
+        [10, 1007, 10, 3, 0.0],
+        [11, 1008, 1, 2, 1.0],
+        [12, 1009, 4, 1, 0.0]
+      ]
+    },
+    {
+      "name": "shifts",
+      "description": "Each row is a staff shift worked at a branch.",
+      "columns": [
+        {"name": "shift_id", "type": "INTEGER", "pk": true, "doc": "Numeric ID of the shift."},
+        {"name": "branch_id", "type": "INTEGER", "doc": "Branch where the shift was worked."},
+        {"name": "staff_name", "type": "TEXT", "doc": "Full name of the employee who worked the shift."},
+        {"name": "role", "type": "INTEGER", "doc": "Role code for the shift: 1 = kitchen, 2 = floor service, 3 = bar, 4 = duty manager."},
+        {"name": "shift_date", "type": "TEXT", "doc": "Calendar date of the shift, written as YYYY-MM-DD."},
+        {"name": "hours", "type": "REAL", "doc": "Hours worked on the shift after deducting the unpaid 30-minute meal break."},
+        {"name": "hourly_rate", "type": "REAL", "doc": "Hourly pay rate in Singapore dollars before employer pension contributions."}
+      ],
+      "rows": [
+        [1, 1, "Wei Jie Tan", 1, "2026-03-02", 8.0, 14.50],
+        [2, 1, "Siti Rahman", 3, "2026-03-02", 4.5, 11.00],
+        [3, 2, "Priya Nair", 2, "2026-03-02", 7.5, 10.50],
+        [4, 1, "Wei Jie Tan", 1, "2026-03-03", 7.5, 14.50],
+        [5, 2, "Marcus Ong", 4, "2026-03-03", 9.0, 22.00],
+        [6, 1, "Siti Rahman", 3, "2026-03-04", 5.0, 11.00],
+        [7, 4, "Farah Ismail", 3, "2026-03-04", 6.0, 11.50],
+        [8, 1, "Wei Jie Tan", 1, "2026-03-05", 8.5, 14.50],
+        [9, 1, "Siti Rahman", 3, "2026-03-05", 4.0, 11.00],
+        [10, 4, "Daniel Koh", 1, "2026-03-05", 8.0, 15.00],
+        [11, 1, "Siti Rahman", 3, "2026-03-06", 4.5, 11.00],
+        [12, 7, "Farah Ismail", 3, "2026-03-06", 7.0, 11.50]
+      ]
+    }
+  ],
+  "foreign_keys": [
+    ["menu_items.supplier_id", "suppliers.supplier_id"],
+    ["orders.branch_id", "branches.branch_id"],
+    ["order_lines.order_id", "orders.order_id"],
+    ["order_lines.item_id", "menu_items.item_id"],
+    ["shifts.branch_id", "branches.branch_id"]
+  ],
+  "questions": [
+    {"id": "q01", "text": "How many orders came in through our own website or app?",
+     "sql": "SELECT COUNT(*) FROM orders WHERE channel = 4",
+     "needs_columns": ["orders.channel"],
+     "needs_docs": [{"column": "orders.channel", "fact": "code 4 means the order came through the chain's own website or app"}]},
+    {"id": "q02", "text": "Add up the hours worked by our bar staff.",
+     "sql": "SELECT SUM(hours) FROM shifts WHERE role = 3",
+     "needs_columns": ["shifts.hours", "shifts.role"],
+     "needs_docs": [{"column": "shifts.role", "fact": "role code 3 means bar staff"}]},
+    {"id": "q03", "text": "After 10 pm, how many orders did we take?",
+     "sql": "SELECT COUNT(*) FROM orders WHERE CAST(strftime('%H', datetime(placed_at, '+8 hours')) AS INTEGER) >= 22",
+     "needs_columns": ["orders.placed_at"],
+     "needs_docs": [{"column": "orders.placed_at", "fact": "timestamps are in UTC while the branches keep Singapore time (UTC+8), so 10 pm local is 14:00 in the stored time"}]},
+    {"id": "q04", "text": "What is the Chilli Crab's price before tax?",
+     "sql": "SELECT ROUND(price / 1.09, 2) FROM menu_items WHERE item_name = 'Chilli Crab'",
+     "needs_columns": ["menu_items.price", "menu_items.item_name"],
+     "needs_docs": [{"column": "menu_items.price", "fact": "the listed price already includes 9% GST, so the pre-tax price is the listed price divided by 1.09"}]},
+    {"id": "q05", "text": "In total, how much money did discounts take off our bills?",
+     "sql": "SELECT SUM(discount) FROM order_lines",
+     "needs_columns": ["order_lines.discount"],
+     "needs_docs": [{"column": "order_lines.discount", "fact": "the discount is an amount in Singapore dollars, not a percentage"}]},
+    {"id": "q06", "text": "Which suppliers can deliver within a week?",
+     "sql": "SELECT supplier_name FROM suppliers WHERE lead_time <= 5 ORDER BY supplier_name",
+     "needs_columns": ["suppliers.supplier_name", "suppliers.lead_time"],
+     "needs_docs": [{"column": "suppliers.lead_time", "fact": "lead time is counted in working days, so one week means at most 5"}]},
+    {"id": "q07", "text": "List the suppliers whose deliveries arrive late more than 10% of the time.",
+     "sql": "SELECT supplier_name FROM suppliers WHERE reliability < 90 ORDER BY supplier_name",
+     "needs_columns": ["suppliers.supplier_name", "suppliers.reliability"],
+     "needs_docs": [{"column": "suppliers.reliability", "fact": "reliability is the percentage of deliveries that arrived on time, so late more than 10% of the time means below 90"}]},
+    {"id": "q08", "text": "Tell me which dishes have shellfish in them.",
+     "sql": "SELECT item_name FROM menu_items WHERE (allergens & 2) > 0 ORDER BY item_name",
+     "needs_columns": ["menu_items.item_name", "menu_items.allergens"],
+     "needs_docs": [{"column": "menu_items.allergens", "fact": "allergen flags are added together and the value 2 stands for shellfish"}]},
+    {"id": "q09", "text": "Which branch has the most seats?",
+     "sql": "SELECT branch_name FROM branches ORDER BY seats DESC LIMIT 1",
+     "needs_columns": ["branches.branch_name", "branches.seats"],
+     "needs_docs": []},
+    {"id": "q10", "text": "Show me everything on the menu that comes from Golden Wok Noodles.",
+     "sql": "SELECT m.item_name FROM menu_items m JOIN suppliers s ON s.supplier_id = m.supplier_id WHERE s.supplier_name = 'Golden Wok Noodles' ORDER BY m.item_name",
+     "needs_columns": ["menu_items.item_name", "suppliers.supplier_name"],
+     "needs_docs": []}
+  ],
+  "ambiguous": [
+    {"id": "a01", "text": "Which branch is the busiest?",
+     "readings": [
+       {"gloss": "took the most orders",
+        "sql": "SELECT b.branch_name FROM branches b JOIN orders o ON o.branch_id = b.branch_id GROUP BY b.branch_id ORDER BY COUNT(*) DESC, b.branch_name LIMIT 1"},
+       {"gloss": "sold the most servings",
+        "sql": "SELECT b.branch_name FROM branches b JOIN orders o ON o.branch_id = b.branch_id JOIN order_lines l ON l.order_id = o.order_id GROUP BY b.branch_id ORDER BY SUM(l.qty) DESC, b.branch_name LIMIT 1"}
+     ],
+     "needs_columns": ["branches.branch_name", "order_lines.qty"],
+     "resolving_note": {"table": "branches", "text": "Branch busyness is measured by how many orders the branch has taken."}},
+    {"id": "a02", "text": "What is our top-selling dish?",
+     "readings": [
+       {"gloss": "most servings sold",
+        "sql": "SELECT m.item_name FROM menu_items m JOIN order_lines l ON l.item_id = m.item_id GROUP BY m.item_id ORDER BY SUM(l.qty) DESC, m.item_name LIMIT 1"},
+       {"gloss": "highest sales value at menu price",
+        "sql": "SELECT m.item_name FROM menu_items m JOIN order_lines l ON l.item_id = m.item_id GROUP BY m.item_id ORDER BY SUM(l.qty * m.price) DESC, m.item_name LIMIT 1"}
+     ],
+     "needs_columns": ["menu_items.item_name", "menu_items.price", "order_lines.qty"],
+     "resolving_note": {"table": "menu_items", "text": "Dishes are ranked by servings sold, not by sales value."}},
+    {"id": "a03", "text": "Who is our best supplier?",
+     "readings": [
+       {"gloss": "highest on-time delivery percentage",
+        "sql": "SELECT supplier_name FROM suppliers ORDER BY reliability DESC, supplier_name LIMIT 1"},
+       {"gloss": "shortest delivery lead time",
+        "sql": "SELECT supplier_name FROM suppliers ORDER BY lead_time ASC, supplier_name LIMIT 1"}
+     ],
+     "needs_columns": ["suppliers.supplier_name", "suppliers.reliability", "suppliers.lead_time"],
+     "resolving_note": {"table": "suppliers", "text": "Supplier quality is judged by on-time delivery percentage, the higher the better."}},
+    {"id": "a04", "text": "How much did order 1004 cost?",
+     "readings": [
+       {"gloss": "what the guest pays, after line discounts",
+        "sql": "SELECT SUM(m.price * l.qty - l.discount) FROM order_lines l JOIN menu_items m ON m.item_id = l.item_id WHERE l.order_id = 1004"},
+       {"gloss": "menu value before any discounts",
+        "sql": "SELECT SUM(m.price * l.qty) FROM order_lines l JOIN menu_items m ON m.item_id = l.item_id WHERE l.order_id = 1004"}
+     ],
+     "needs_columns": ["menu_items.price", "order_lines.qty", "order_lines.discount"],
+     "resolving_note": {"table": "order_lines", "text": "The cost of an order means what the guest actually pays, so line discounts are subtracted from menu price times quantity."}},
+    {"id": "a05", "text": "Who is our hardest-working team member?",
+     "readings": [
+       {"gloss": "most total hours worked",
+        "sql": "SELECT staff_name FROM shifts GROUP BY staff_name ORDER BY SUM(hours) DESC, staff_name LIMIT 1"},
+       {"gloss": "most shifts worked",
+        "sql": "SELECT staff_name FROM shifts GROUP BY staff_name ORDER BY COUNT(*) DESC, staff_name LIMIT 1"}
+     ],
+     "needs_columns": ["shifts.staff_name", "shifts.hours"],
+     "resolving_note": {"table": "shifts", "text": "Work effort is compared by total hours worked, not by the number of shifts."}}
+  ]
+}

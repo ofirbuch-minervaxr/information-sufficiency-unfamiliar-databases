@@ -1,0 +1,245 @@
+{
+  "db_id": "university",
+  "domain": "university course administration",
+  "tables": [
+    {
+      "name": "departments",
+      "description": "One row per academic department of the university.",
+      "columns": [
+        {"name": "dept_id", "type": "INTEGER", "pk": true, "doc": "Identifier of the department."},
+        {"name": "dept_name", "type": "TEXT", "doc": "Official name of the department."},
+        {"name": "building", "type": "TEXT", "doc": "Building that houses the department office."},
+        {"name": "annual_budget", "type": "REAL", "doc": "Yearly operating budget of the department, expressed in thousands of euros."}
+      ],
+      "rows": [
+        [1, "Computer Science", "Turing Hall", 4200.0],
+        [2, "Mathematics", "Noether Building", 2800.0],
+        [3, "Physics", "Curie Hall", 3900.0],
+        [4, "Chemistry", "Curie Hall", 3300.0],
+        [5, "Economics", "Keynes House", 1900.0],
+        [6, "History", "Gibbon House", 1200.0],
+        [7, "Biology", "Darwin Wing", 3600.0],
+        [8, "Philosophy", "Gibbon House", 800.0]
+      ]
+    },
+    {
+      "name": "instructors",
+      "description": "One row per member of the teaching staff.",
+      "columns": [
+        {"name": "instructor_id", "type": "INTEGER", "pk": true, "doc": "Identifier of the instructor."},
+        {"name": "instructor_name", "type": "TEXT", "doc": "Full name of the instructor."},
+        {"name": "dept_id", "type": "INTEGER", "doc": "Department the instructor belongs to."},
+        {"name": "contract_type", "type": "INTEGER", "doc": "Employment arrangement code: 1 = permanent post, 2 = fixed-term contract, 3 = adjunct paid per course, 4 = visiting lecturer from another university."},
+        {"name": "hire_year", "type": "INTEGER", "doc": "Calendar year in which the instructor was first hired."}
+      ],
+      "rows": [
+        [1, "Hana Levin", 1, 2, 2016],
+        [2, "Marcus Weber", 2, 1, 2009],
+        [3, "Elena Petrova", 3, 3, 2019],
+        [4, "Samuel Okoye", 1, 1, 2012],
+        [5, "Ingrid Larsen", 4, 1, 2005],
+        [6, "Tomas Novak", 5, 4, 2023],
+        [7, "Aisha Rahman", 7, 2, 2018],
+        [8, "Julien Moreau", 6, 1, 2001],
+        [9, "Katarina Horvat", 2, 4, 2024]
+      ]
+    },
+    {
+      "name": "students",
+      "description": "One row per student currently registered at the university.",
+      "columns": [
+        {"name": "student_id", "type": "INTEGER", "pk": true, "doc": "Identifier of the student."},
+        {"name": "student_name", "type": "TEXT", "doc": "Full name of the student."},
+        {"name": "dept_id", "type": "INTEGER", "doc": "Department of the student's declared major."},
+        {"name": "start_year", "type": "INTEGER", "doc": "Calendar year in which the student first enrolled at the university."},
+        {"name": "fee_category", "type": "INTEGER", "doc": "Fee arrangement code: 1 = standard domestic fee, 2 = international fee, 3 = full scholarship with tuition waived, 4 = staff-dependent discount."},
+        {"name": "account_balance", "type": "REAL", "doc": "Current balance of the student's fee account in euros, calculated as payments received minus fees charged, so a negative balance means the student still owes the university."}
+      ],
+      "rows": [
+        [1, "Noam Shapiro", 5, 2023, 1, 0.0],
+        [2, "Lucia Fernandez", 1, 2022, 2, 0.0],
+        [3, "Pierre Dubois", 3, 2024, 4, 240.0],
+        [4, "Yara Haddad", 5, 2024, 1, -1850.0],
+        [5, "Kenji Watanabe", 1, 2025, 3, 0.0],
+        [6, "Amara Okafor", 7, 2023, 2, -960.0],
+        [7, "Sofia Rossi", 5, 2025, 1, 0.0],
+        [8, "Ethan Brooks", 2, 2021, 3, 0.0],
+        [9, "Mei Lin Chen", 4, 2025, 2, -2400.0],
+        [10, "Oskar Lindqvist", 7, 2022, 1, -310.0],
+        [11, "Fatima Zahra", 6, 2024, 3, 0.0],
+        [12, "Tobias Kruger", 2, 2025, 1, 75.0]
+      ]
+    },
+    {
+      "name": "courses",
+      "description": "One row per course in the catalogue, each taught by a single instructor.",
+      "columns": [
+        {"name": "course_id", "type": "INTEGER", "pk": true, "doc": "Identifier of the course."},
+        {"name": "course_title", "type": "TEXT", "doc": "Title of the course as shown in the catalogue."},
+        {"name": "dept_id", "type": "INTEGER", "doc": "Department that offers the course."},
+        {"name": "instructor_id", "type": "INTEGER", "doc": "Instructor who teaches the course."},
+        {"name": "credit_points", "type": "INTEGER", "doc": "Credit value of the course in ECTS points, where one point stands for 26 hours of total student work."}
+      ],
+      "rows": [
+        [1, "Introduction to Programming", 1, 4, 6],
+        [2, "Databases", 1, 1, 6],
+        [3, "Linear Algebra", 2, 2, 8],
+        [4, "Quantum Mechanics", 3, 3, 10],
+        [5, "Organic Chemistry", 4, 5, 8],
+        [6, "Microeconomics", 5, 6, 6],
+        [7, "Medieval Europe", 6, 8, 5],
+        [8, "Genetics", 7, 7, 6],
+        [9, "Algorithms", 1, 4, 6],
+        [10, "Software Engineering", 1, 4, 8]
+      ]
+    },
+    {
+      "name": "enrolments",
+      "description": "One row per student registration on a course in a given term, with the final grade.",
+      "columns": [
+        {"name": "enrolment_id", "type": "INTEGER", "pk": true, "doc": "Identifier of the course registration."},
+        {"name": "student_id", "type": "INTEGER", "doc": "Student who registered for the course."},
+        {"name": "course_id", "type": "INTEGER", "doc": "Course the student registered for."},
+        {"name": "term", "type": "TEXT", "doc": "Term code made of the last two digits of the calendar year in which the academic year starts followed by one semester digit (1 = autumn, 2 = spring, 3 = summer session), so 241 is autumn 2024 and 243 is the summer session of 2025."},
+        {"name": "grade", "type": "INTEGER", "doc": "Final grade on a 1 to 5 scale where 1 is the best, 4 is the lowest passing grade and 5 means the course was failed."}
+      ],
+      "rows": [
+        [1, 2, 2, "241", 2],
+        [2, 1, 6, "241", 1],
+        [3, 4, 6, "242", 1],
+        [4, 6, 2, "232", 5],
+        [5, 10, 2, "241", 5],
+        [6, 1, 2, "242", 3],
+        [7, 8, 3, "232", 4],
+        [8, 3, 3, "241", 4],
+        [9, 2, 9, "242", 1],
+        [10, 10, 8, "243", 3],
+        [11, 12, 1, "243", 2],
+        [12, 5, 10, "243", 3]
+      ]
+    },
+    {
+      "name": "fee_payments",
+      "description": "One row per payment received from a student by the bursar's office.",
+      "columns": [
+        {"name": "payment_id", "type": "INTEGER", "pk": true, "doc": "Identifier of the payment."},
+        {"name": "student_id", "type": "INTEGER", "doc": "Student who made the payment."},
+        {"name": "amount", "type": "REAL", "doc": "Amount paid, in euros."},
+        {"name": "kind", "type": "INTEGER", "doc": "Payment purpose code: 1 = tuition instalment, 2 = late-payment penalty, 3 = exam resit fee, 4 = refundable equipment deposit."},
+        {"name": "paid_on", "type": "TEXT", "doc": "Date the payment was received, written as DD/MM/YYYY."}
+      ],
+      "rows": [
+        [1, 6, 85.0, 3, "08/01/2025"],
+        [2, 1, 1250.0, 1, "10/03/2025"],
+        [3, 9, 300.0, 4, "04/02/2025"],
+        [4, 2, 2400.0, 1, "12/09/2024"],
+        [5, 2, 2400.0, 1, "14/01/2025"],
+        [6, 2, 2400.0, 1, "22/04/2025"],
+        [7, 9, 4800.0, 1, "03/03/2025"],
+        [8, 4, 1250.0, 1, "27/03/2025"],
+        [9, 4, 45.0, 2, "03/04/2025"],
+        [10, 10, 60.0, 2, "18/03/2025"],
+        [11, 7, 1250.0, 1, "21/02/2025"],
+        [12, 3, 625.0, 1, "16/05/2025"]
+      ]
+    }
+  ],
+  "foreign_keys": [
+    ["instructors.dept_id", "departments.dept_id"],
+    ["students.dept_id", "departments.dept_id"],
+    ["courses.dept_id", "departments.dept_id"],
+    ["courses.instructor_id", "instructors.instructor_id"],
+    ["enrolments.student_id", "students.student_id"],
+    ["enrolments.course_id", "courses.course_id"],
+    ["fee_payments.student_id", "students.student_id"]
+  ],
+  "questions": [
+    {"id": "q01", "text": "Give me the number of visiting lecturers on our staff.",
+     "sql": "SELECT COUNT(*) FROM instructors WHERE contract_type = 4",
+     "needs_columns": ["instructors.contract_type"],
+     "needs_docs": [{"column": "instructors.contract_type", "fact": "code 4 means a visiting lecturer from another university"}]},
+    {"id": "q02", "text": "Name the students who study on a full scholarship.",
+     "sql": "SELECT student_name FROM students WHERE fee_category = 3 ORDER BY student_name",
+     "needs_columns": ["students.student_name", "students.fee_category"],
+     "needs_docs": [{"column": "students.fee_category", "fact": "code 3 means a full scholarship with tuition waived"}]},
+    {"id": "q03", "text": "Which course has handed out the most top marks?",
+     "sql": "SELECT c.course_title FROM enrolments e JOIN courses c ON c.course_id = e.course_id WHERE e.grade = 1 GROUP BY c.course_id ORDER BY COUNT(*) DESC, c.course_title LIMIT 1",
+     "needs_columns": ["enrolments.grade", "courses.course_title"],
+     "needs_docs": [{"column": "enrolments.grade", "fact": "grades run from 1 to 5 and 1 is the best grade, 5 is a fail"}]},
+    {"id": "q04", "text": "Count the course registrations we had in the summer of 2025.",
+     "sql": "SELECT COUNT(*) FROM enrolments WHERE term = '243'",
+     "needs_columns": ["enrolments.term"],
+     "needs_docs": [{"column": "enrolments.term", "fact": "the first two digits of a term code give the year the academic year starts and the last digit the semester, so the summer session of 2025 is code 243"}]},
+    {"id": "q05", "text": "For the Databases course, what is the total student workload in hours?",
+     "sql": "SELECT credit_points * 26 FROM courses WHERE course_title = 'Databases'",
+     "needs_columns": ["courses.credit_points", "courses.course_title"],
+     "needs_docs": [{"column": "courses.credit_points", "fact": "one credit point stands for 26 hours of total student work"}]},
+    {"id": "q06", "text": "How many students currently owe the university money?",
+     "sql": "SELECT COUNT(*) FROM students WHERE account_balance < 0",
+     "needs_columns": ["students.account_balance"],
+     "needs_docs": [{"column": "students.account_balance", "fact": "the balance is payments minus fees charged, so a negative balance means the student owes money"}]},
+    {"id": "q07", "text": "How much have we collected so far in late-payment penalties?",
+     "sql": "SELECT SUM(amount) FROM fee_payments WHERE kind = 2",
+     "needs_columns": ["fee_payments.amount", "fee_payments.kind"],
+     "needs_docs": [{"column": "fee_payments.kind", "fact": "code 2 means a late-payment penalty"}]},
+    {"id": "q08", "text": "During March 2025, how much money came in from student payments?",
+     "sql": "SELECT SUM(amount) FROM fee_payments WHERE SUBSTR(paid_on, 4, 7) = '03/2025'",
+     "needs_columns": ["fee_payments.amount", "fee_payments.paid_on"],
+     "needs_docs": [{"column": "fee_payments.paid_on", "fact": "dates are written day/month/year, so the middle part is the month"}]},
+    {"id": "q09", "text": "Who teaches Linear Algebra?",
+     "sql": "SELECT i.instructor_name FROM courses c JOIN instructors i ON i.instructor_id = c.instructor_id WHERE c.course_title = 'Linear Algebra'",
+     "needs_columns": ["courses.course_title", "instructors.instructor_name"],
+     "needs_docs": []},
+    {"id": "q10", "text": "I'd like to know how many courses the Computer Science department runs.",
+     "sql": "SELECT COUNT(*) FROM courses c JOIN departments d ON d.dept_id = c.dept_id WHERE d.dept_name = 'Computer Science'",
+     "needs_columns": ["departments.dept_name"],
+     "needs_docs": []}
+  ],
+  "ambiguous": [
+    {"id": "a01", "text": "Which department is the biggest?",
+     "readings": [
+       {"gloss": "most students majoring in it",
+        "sql": "SELECT d.dept_name FROM departments d JOIN students s ON s.dept_id = d.dept_id GROUP BY d.dept_id ORDER BY COUNT(*) DESC, d.dept_name LIMIT 1"},
+       {"gloss": "largest yearly budget",
+        "sql": "SELECT dept_name FROM departments ORDER BY annual_budget DESC LIMIT 1"}
+     ],
+     "needs_columns": ["departments.dept_name", "departments.annual_budget"],
+     "resolving_note": {"table": "departments", "text": "Department size is conventionally measured by the number of students majoring in it."}},
+    {"id": "a02", "text": "Which instructor has the heaviest teaching load?",
+     "readings": [
+       {"gloss": "teaches the most courses",
+        "sql": "SELECT i.instructor_name FROM instructors i JOIN courses c ON c.instructor_id = i.instructor_id GROUP BY i.instructor_id ORDER BY COUNT(*) DESC, i.instructor_name LIMIT 1"},
+       {"gloss": "has the most student registrations across their courses",
+        "sql": "SELECT i.instructor_name FROM instructors i JOIN courses c ON c.instructor_id = i.instructor_id JOIN enrolments e ON e.course_id = c.course_id GROUP BY i.instructor_id ORDER BY COUNT(*) DESC, i.instructor_name LIMIT 1"}
+     ],
+     "needs_columns": ["instructors.instructor_name"],
+     "resolving_note": {"table": "instructors", "text": "Teaching load is counted as the number of courses an instructor teaches."}},
+    {"id": "a03", "text": "Which student is our top payer?",
+     "readings": [
+       {"gloss": "highest total paid across all payments",
+        "sql": "SELECT s.student_name FROM students s JOIN fee_payments p ON p.student_id = s.student_id GROUP BY s.student_id ORDER BY SUM(p.amount) DESC, s.student_name LIMIT 1"},
+       {"gloss": "largest single payment",
+        "sql": "SELECT s.student_name FROM students s JOIN fee_payments p ON p.student_id = s.student_id GROUP BY s.student_id ORDER BY MAX(p.amount) DESC, s.student_name LIMIT 1"}
+     ],
+     "needs_columns": ["students.student_name", "fee_payments.amount"],
+     "resolving_note": {"table": "fee_payments", "text": "The top payer is taken to be the student whose payments add up to the highest total."}},
+    {"id": "a04", "text": "Which course is the toughest?",
+     "readings": [
+       {"gloss": "weakest average grade",
+        "sql": "SELECT c.course_title FROM courses c JOIN enrolments e ON e.course_id = c.course_id GROUP BY c.course_id ORDER BY AVG(e.grade) DESC, c.course_title LIMIT 1"},
+       {"gloss": "most failed registrations",
+        "sql": "SELECT c.course_title FROM courses c JOIN enrolments e ON e.course_id = c.course_id WHERE e.grade = 5 GROUP BY c.course_id ORDER BY COUNT(*) DESC, c.course_title LIMIT 1"}
+     ],
+     "needs_columns": ["courses.course_title", "enrolments.grade"],
+     "resolving_note": {"table": "courses", "text": "Course difficulty is judged by the average grade of its students, a weaker average meaning a tougher course."}},
+    {"id": "a05", "text": "Which students joined us recently?",
+     "readings": [
+       {"gloss": "started in the latest start year only",
+        "sql": "SELECT student_name FROM students WHERE start_year = (SELECT MAX(start_year) FROM students) ORDER BY student_name"},
+       {"gloss": "started in the latest two start years",
+        "sql": "SELECT student_name FROM students WHERE start_year >= (SELECT MAX(start_year) FROM students) - 1 ORDER BY student_name"}
+     ],
+     "needs_columns": ["students.student_name", "students.start_year"],
+     "resolving_note": {"table": "students", "text": "Recent joiners are the students who started in the latest start year on record."}}
+  ]
+}

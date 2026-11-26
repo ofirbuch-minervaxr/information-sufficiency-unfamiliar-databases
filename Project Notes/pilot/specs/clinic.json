@@ -1,0 +1,189 @@
+{
+  "db_id": "clinic",
+  "domain": "outpatient medical clinic",
+  "tables": [
+    {
+      "name": "doctors",
+      "description": "Doctors on the clinic's staff roster.",
+      "columns": [
+        {"name": "doctor_id", "type": "INTEGER", "pk": true, "doc": "Unique doctor identifier."},
+        {"name": "doctor_name", "type": "TEXT", "doc": "Doctor's name as shown on the roster."},
+        {"name": "dept", "type": "INTEGER", "doc": "Department code: 1 = general practice, 2 = paediatrics, 3 = cardiology, 4 = dermatology, 5 = orthopaedics."},
+        {"name": "employed_since", "type": "TEXT", "doc": "Date the doctor joined the clinic staff, YYYY-MM-DD."}
+      ],
+      "rows": [
+        [1, "Dr Helena Okoro", 3, "2016-02-01"], [2, "Dr Mateo Alvarez", 1, "2012-08-15"],
+        [3, "Dr Anika Rao", 2, "2019-03-04"], [4, "Dr Emily Carter", 1, "2021-01-11"],
+        [5, "Dr Chloe Laurent", 4, "2023-06-19"], [6, "Dr Tomas Novak", 5, "2018-09-03"],
+        [7, "Dr Yara Haddad", 3, "2020-05-25"], [8, "Dr Liam Connolly", 1, "2024-02-12"]
+      ]
+    },
+    {
+      "name": "patients",
+      "description": "People registered with the clinic as patients.",
+      "columns": [
+        {"name": "patient_id", "type": "INTEGER", "pk": true, "doc": "Unique patient identifier."},
+        {"name": "patient_name", "type": "TEXT", "doc": "Patient's full name."},
+        {"name": "birth_year", "type": "INTEGER", "doc": "Four-digit year the patient was born."},
+        {"name": "blood_type", "type": "TEXT", "doc": "Blood group recorded at registration, for example A+ or O-."},
+        {"name": "registered_on", "type": "TEXT", "doc": "Date the patient first registered with the clinic, YYYY-MM-DD."}
+      ],
+      "rows": [
+        [1, "Marcus Bell", 1958, "O+", "2018-03-12"], [2, "Anna Kowalski", 1984, "A+", "2019-07-22"],
+        [3, "Priya Shah", 1991, "B+", "2020-01-15"], [4, "Daniel Moreno", 1972, "O-", "2020-09-03"],
+        [5, "Lena Fischer", 2015, "A-", "2021-02-18"], [6, "Peter Okafor", 1949, "AB+", "2018-11-30"],
+        [7, "Nomi Ellis", 1979, "O+", "2021-06-09"], [8, "Ayesha Khan", 2009, "B-", "2022-03-28"],
+        [9, "Jonas Berg", 1955, "A+", "2019-10-14"], [10, "Zoe Hartmann", 1996, "O+", "2023-05-06"],
+        [11, "Michael Jacobs", 2018, "A+", "2023-08-21"], [12, "Esther Lindqvist", 1966, "B+", "2024-04-17"]
+      ]
+    },
+    {
+      "name": "appointments",
+      "description": "Consultations booked with the clinic's doctors.",
+      "columns": [
+        {"name": "appt_id", "type": "INTEGER", "pk": true, "doc": "Unique appointment identifier."},
+        {"name": "patient_id", "type": "INTEGER", "doc": "The patient who booked the appointment."},
+        {"name": "doctor_id", "type": "INTEGER", "doc": "The doctor the appointment is with."},
+        {"name": "starts_at", "type": "TEXT", "doc": "Scheduled start in clinic local time, YYYY-MM-DD HH:MM."},
+        {"name": "slots", "type": "INTEGER", "doc": "Number of 15-minute slots reserved for the appointment."},
+        {"name": "status", "type": "INTEGER", "doc": "Outcome code: 1 = attended, 2 = cancelled by the patient, 3 = patient did not show up, 4 = still booked."}
+      ],
+      "rows": [
+        [1, 4, 2, "2026-01-12 09:00", 2, 2], [2, 1, 1, "2026-01-13 10:30", 1, 1],
+        [3, 9, 7, "2026-01-15 14:00", 3, 3], [4, 6, 4, "2026-01-20 08:30", 1, 1],
+        [5, 5, 3, "2026-01-22 11:15", 2, 1], [6, 6, 1, "2026-02-03 09:45", 2, 1],
+        [7, 2, 6, "2026-02-05 13:30", 4, 1], [8, 1, 7, "2026-02-10 15:00", 3, 1],
+        [9, 10, 5, "2026-02-17 10:00", 1, 3], [10, 7, 8, "2026-02-24 16:15", 1, 1],
+        [11, 12, 1, "2026-03-09 09:00", 2, 4], [12, 11, 3, "2026-03-16 11:00", 1, 4]
+      ]
+    },
+    {
+      "name": "prescriptions",
+      "description": "Medications prescribed during appointments.",
+      "columns": [
+        {"name": "rx_id", "type": "INTEGER", "pk": true, "doc": "Unique prescription identifier."},
+        {"name": "appt_id", "type": "INTEGER", "doc": "The appointment during which the drug was prescribed."},
+        {"name": "drug", "type": "TEXT", "doc": "Name of the prescribed medication."},
+        {"name": "course", "type": "INTEGER", "doc": "Length of the treatment course in weeks."}
+      ],
+      "rows": [
+        [1, 4, "Amlodipine", 12], [2, 5, "Salbutamol", 8], [3, 6, "Atorvastatin", 26],
+        [4, 2, "Amlodipine", 26], [5, 7, "Ibuprofen", 2], [6, 8, "Amlodipine", 26],
+        [7, 10, "Atorvastatin", 12], [8, 6, "Amlodipine", 12], [9, 2, "Atorvastatin", 26],
+        [10, 5, "Cetirizine", 4], [11, 10, "Amoxicillin", 1], [12, 7, "Paracetamol", 1]
+      ]
+    },
+    {
+      "name": "invoices",
+      "description": "Bills raised for appointments, including no-show and late-cancellation fees.",
+      "columns": [
+        {"name": "invoice_id", "type": "INTEGER", "pk": true, "doc": "Unique invoice identifier."},
+        {"name": "appt_id", "type": "INTEGER", "doc": "The appointment the invoice was raised for."},
+        {"name": "amount", "type": "REAL", "doc": "Total amount invoiced, in South African rand."},
+        {"name": "issued_on", "type": "TEXT", "doc": "Invoice date, YYYY-MM-DD; the clinic's financial year runs from 1 March to the end of February and is named after the year in which it ends."},
+        {"name": "payer", "type": "INTEGER", "doc": "Billing party code: 1 = the patient directly, 2 = a private insurer, 3 = the patient's employer."},
+        {"name": "state", "type": "INTEGER", "doc": "Payment state code: 1 = unpaid, 2 = paid in full, 3 = part paid, 4 = written off."}
+      ],
+      "rows": [
+        [1, 4, 450.0, "2026-01-31", 2, 3], [2, 5, 520.0, "2026-01-31", 3, 2],
+        [3, 6, 780.0, "2026-02-28", 2, 1], [4, 2, 780.0, "2026-01-31", 1, 2],
+        [5, 7, 850.0, "2026-02-28", 2, 2], [6, 8, 780.0, "2026-02-28", 1, 1],
+        [7, 10, 450.0, "2026-03-02", 3, 1], [8, 3, 150.0, "2026-01-31", 1, 4],
+        [9, 9, 150.0, "2026-02-28", 1, 1], [10, 1, 100.0, "2026-01-31", 1, 4]
+      ]
+    }
+  ],
+  "foreign_keys": [
+    ["appointments.patient_id", "patients.patient_id"],
+    ["appointments.doctor_id", "doctors.doctor_id"],
+    ["prescriptions.appt_id", "appointments.appt_id"],
+    ["invoices.appt_id", "appointments.appt_id"]
+  ],
+  "questions": [
+    {"id": "q01", "text": "Which doctor has been on staff the longest?",
+     "sql": "SELECT doctor_name FROM doctors ORDER BY employed_since ASC LIMIT 1",
+     "needs_columns": ["doctors.doctor_name", "doctors.employed_since"], "needs_docs": []},
+    {"id": "q02", "text": "How many cardiologists do we employ?",
+     "sql": "SELECT COUNT(*) FROM doctors WHERE dept = 3",
+     "needs_columns": ["doctors.dept"],
+     "needs_docs": [{"column": "doctors.dept", "fact": "code 3 means cardiology"}]},
+    {"id": "q03", "text": "Count the appointments where the patient never turned up.",
+     "sql": "SELECT COUNT(*) FROM appointments WHERE status = 3",
+     "needs_columns": ["appointments.status"],
+     "needs_docs": [{"column": "appointments.status", "fact": "code 3 means the patient did not show up"}]},
+    {"id": "q04", "text": "What is the longest consultation in the diary, in minutes?",
+     "sql": "SELECT MAX(slots) * 15 FROM appointments",
+     "needs_columns": ["appointments.slots"],
+     "needs_docs": [{"column": "appointments.slots", "fact": "each slot is 15 minutes, so minutes = slots x 15"}]},
+    {"id": "q05", "text": "Name the medicines that patients are put on for longer than 30 days.",
+     "sql": "SELECT DISTINCT drug FROM prescriptions WHERE course * 7 > 30 ORDER BY drug",
+     "needs_columns": ["prescriptions.drug", "prescriptions.course"],
+     "needs_docs": [{"column": "prescriptions.course", "fact": "course length is measured in weeks, not days"}]},
+    {"id": "q06", "text": "What have we invoiced in total, in rand?",
+     "sql": "SELECT SUM(amount) FROM invoices",
+     "needs_columns": ["invoices.amount"],
+     "needs_docs": [{"column": "invoices.amount", "fact": "amounts are in South African rand"}]},
+    {"id": "q07", "text": "How much did the clinic bill during the 2026 financial year?",
+     "sql": "SELECT SUM(amount) FROM invoices WHERE issued_on >= '2025-03-01' AND issued_on <= '2026-02-28'",
+     "needs_columns": ["invoices.amount", "invoices.issued_on"],
+     "needs_docs": [{"column": "invoices.issued_on", "fact": "the 2026 financial year runs from 1 March 2025 to 28 February 2026"}]},
+    {"id": "q08", "text": "Of all our invoices, how many go to a private insurer?",
+     "sql": "SELECT COUNT(*) FROM invoices WHERE payer = 2",
+     "needs_columns": ["invoices.payer"],
+     "needs_docs": [{"column": "invoices.payer", "fact": "code 2 means a private insurer is billed"}]},
+    {"id": "q09", "text": "Invoices that are paid in full: how many are there?",
+     "sql": "SELECT COUNT(*) FROM invoices WHERE state = 2",
+     "needs_columns": ["invoices.state"],
+     "needs_docs": [{"column": "invoices.state", "fact": "code 2 means paid in full"}]},
+    {"id": "q10", "text": "List the patients born before 1960.",
+     "sql": "SELECT patient_name FROM patients WHERE birth_year < 1960 ORDER BY patient_name",
+     "needs_columns": ["patients.patient_name", "patients.birth_year"], "needs_docs": []}
+  ],
+  "ambiguous": [
+    {"id": "a01", "text": "Whose diary is the fullest?",
+     "readings": [
+       {"gloss": "most appointments",
+        "sql": "SELECT d.doctor_name FROM doctors d JOIN appointments a ON a.doctor_id = d.doctor_id GROUP BY d.doctor_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most booked time",
+        "sql": "SELECT d.doctor_name FROM doctors d JOIN appointments a ON a.doctor_id = d.doctor_id GROUP BY d.doctor_id ORDER BY SUM(a.slots) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["doctors.doctor_name", "appointments.doctor_id", "appointments.slots"],
+     "resolving_note": {"table": "doctors", "text": "Diary fullness is counted as the number of appointments a doctor has."}},
+    {"id": "a02", "text": "Which medicine gets prescribed most often?",
+     "readings": [
+       {"gloss": "most prescriptions written",
+        "sql": "SELECT drug FROM prescriptions GROUP BY drug ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most different patients",
+        "sql": "SELECT p.drug FROM prescriptions p JOIN appointments a ON a.appt_id = p.appt_id GROUP BY p.drug ORDER BY COUNT(DISTINCT a.patient_id) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["prescriptions.drug", "appointments.patient_id"],
+     "resolving_note": {"table": "prescriptions", "text": "A drug's popularity is counted in prescriptions written, however many patients they went to."}},
+    {"id": "a03", "text": "How much has Marcus Bell spent with us?",
+     "readings": [
+       {"gloss": "everything invoiced to him",
+        "sql": "SELECT SUM(i.amount) FROM invoices i JOIN appointments a ON a.appt_id = i.appt_id JOIN patients p ON p.patient_id = a.patient_id WHERE p.patient_name = 'Marcus Bell'"},
+       {"gloss": "only invoices paid in full",
+        "sql": "SELECT SUM(i.amount) FROM invoices i JOIN appointments a ON a.appt_id = i.appt_id JOIN patients p ON p.patient_id = a.patient_id WHERE p.patient_name = 'Marcus Bell' AND i.state = 2"}
+     ],
+     "needs_columns": ["patients.patient_name", "invoices.amount", "invoices.state"],
+     "resolving_note": {"table": "invoices", "text": "A patient's spend is the sum of every invoice raised for them, settled or not."}},
+    {"id": "a04", "text": "Who has the most recent appointment?",
+     "readings": [
+       {"gloss": "latest start time, including future bookings",
+        "sql": "SELECT p.patient_name FROM appointments a JOIN patients p ON p.patient_id = a.patient_id ORDER BY a.starts_at DESC LIMIT 1"},
+       {"gloss": "latest appointment already attended",
+        "sql": "SELECT p.patient_name FROM appointments a JOIN patients p ON p.patient_id = a.patient_id WHERE a.status = 1 ORDER BY a.starts_at DESC LIMIT 1"}
+     ],
+     "needs_columns": ["patients.patient_name", "appointments.starts_at", "appointments.status"],
+     "resolving_note": {"table": "appointments", "text": "The latest appointment is simply the one with the latest start time, even if it has not happened yet."}},
+    {"id": "a05", "text": "What is our largest department?",
+     "readings": [
+       {"gloss": "most doctors",
+        "sql": "SELECT dept FROM doctors GROUP BY dept ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most appointments",
+        "sql": "SELECT d.dept FROM appointments a JOIN doctors d ON d.doctor_id = a.doctor_id GROUP BY d.dept ORDER BY COUNT(*) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["doctors.dept", "appointments.doctor_id"],
+     "resolving_note": {"table": "doctors", "text": "Department size is measured by the number of doctors who work in it."}}
+  ]
+}

@@ -15,10 +15,12 @@ test = [r for r in rows if r["split"] == "test"]
 random.Random(3).shuffle(test)
 mapping = {}
 for i in range(k):
-    with open(f"{outdir}/judge_chunk_{i + 1}.jsonl", "w", encoding="utf-8") as f:
+    with open(f"{outdir}/judge_chunk_{i + 1}.jsonl", "w", encoding="utf-8") as f, \
+            open(f"{outdir}/judge_chunk_{i + 1}.txt", "w", encoding="utf-8") as t:
         for r in test[i::k]:
             jid = f"j{len(mapping) + 1:03d}"
             mapping[jid] = r["id"]
             f.write(json.dumps({"jid": jid, "question": r["question"], "context": r["context"]}, ensure_ascii=False) + "\n")
+            t.write(f"=== ITEM {jid} ===\n{r['context']}\nQuestion: {r['question']}\n\n")  # readable form for judges
 json.dump(mapping, open(f"{outdir}/judge_map.json", "w"), indent=0)
 print(len(test), "test items in", k, "chunks")
