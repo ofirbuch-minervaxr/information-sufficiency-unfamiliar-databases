@@ -1,0 +1,48 @@
+{"jid": "j001", "label": "AMBIGUOUS", "reason": null, "missing": "'who' = the patient or the doctor on the latest appointment"}
+{"jid": "j002", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j003", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no appointment duration, slots or end-time column; only starts_at"}
+{"jid": "j004", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j005", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "shifts.role codes undocumented; which code is bar staff is unknown"}
+{"jid": "j006", "label": "AMBIGUOUS", "reason": null, "missing": "hardest-working = most total hours vs most shifts worked"}
+{"jid": "j007", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j008", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j009", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j010", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "invoices have no payment status column"}
+{"jid": "j011", "label": "AMBIGUOUS", "reason": null, "missing": "order cost = list price x qty vs net of line discounts (what the guest pays)"}
+{"jid": "j012", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j013", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "invoices have no payer / billing party column"}
+{"jid": "j014", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j015", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j016", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "unit of prescriptions.course undocumented (days vs weeks)"}
+{"jid": "j017", "label": "AMBIGUOUS", "reason": null, "missing": "fullest = most appointments vs most reserved slots; doctor's vs patient's diary"}
+{"jid": "j018", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j019", "label": "AMBIGUOUS", "reason": null, "missing": "top-selling = most servings sold vs highest revenue"}
+{"jid": "j020", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j021", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "invoices.payer codes undocumented; which code is a private insurer is unknown"}
+{"jid": "j022", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j023", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j024", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "prescriptions have no course / treatment duration column"}
+{"jid": "j025", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j026", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j027", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j028", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j029", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j030", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j031", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "timezone of orders.placed_at undocumented (UTC vs local), so '10 pm' is unclear"}
+{"jid": "j032", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j033", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j034", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j035", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "length of a slot undocumented; cannot convert slots to minutes"}
+{"jid": "j036", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j037", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "patients have no birth year or age column"}
+{"jid": "j038", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j039", "label": "AMBIGUOUS", "reason": null, "missing": "largest department = most doctors vs most appointments handled"}
+{"jid": "j040", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j041", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "doctors.dept codes undocumented; which code is cardiology is unknown"}
+{"jid": "j042", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "orders have no channel column"}
+{"jid": "j043", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j044", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j045", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "unit of suppliers.lead_time undocumented (days, working days, weeks)"}
+{"jid": "j046", "label": "AMBIGUOUS", "reason": null, "missing": "best supplier = highest reliability vs shortest lead time"}
+{"jid": "j047", "label": "ANSWERABLE", "reason": null, "missing": ""}
+{"jid": "j048", "label": "ANSWERABLE", "reason": null, "missing": ""}
