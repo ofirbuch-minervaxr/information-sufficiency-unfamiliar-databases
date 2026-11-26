@@ -6,7 +6,7 @@
       "name": "airports",
       "description": "One row per airport on the airline's network.",
       "columns": [
-        {"name": "airport_id", "type": "INTEGER", "pk": true, "doc": "Unique airport identifier."},
+        {"name": "airport_id", "type": "INTEGER", "pk": true, "doc": "Internal number identifying the airport."},
         {"name": "code", "type": "TEXT", "doc": "Three-letter code printed on tickets and boarding passes."},
         {"name": "city", "type": "TEXT", "doc": "City the airport serves."},
         {"name": "country", "type": "TEXT", "doc": "Country where the airport is located."}
@@ -21,7 +21,7 @@
       "name": "aircraft",
       "description": "One row per aircraft in the fleet.",
       "columns": [
-        {"name": "aircraft_id", "type": "INTEGER", "pk": true, "doc": "Unique aircraft identifier."},
+        {"name": "aircraft_id", "type": "INTEGER", "pk": true, "doc": "Fleet number identifying the aircraft."},
         {"name": "tail", "type": "TEXT", "doc": "Registration mark painted on the aircraft."},
         {"name": "model", "type": "TEXT", "doc": "Manufacturer and model name."},
         {"name": "seats", "type": "INTEGER", "doc": "Number of passenger seats in the cabin layout."},
@@ -39,14 +39,14 @@
       "name": "flights",
       "description": "One row per scheduled flight departure.",
       "columns": [
-        {"name": "flight_id", "type": "INTEGER", "pk": true, "doc": "Unique identifier of this scheduled departure."},
+        {"name": "flight_id", "type": "INTEGER", "pk": true, "doc": "Internal number identifying this scheduled departure."},
         {"name": "flight_no", "type": "TEXT", "doc": "Public flight number shown on tickets, reused on later dates."},
         {"name": "origin_id", "type": "INTEGER", "doc": "Airport the flight departs from."},
         {"name": "dest_id", "type": "INTEGER", "doc": "Airport the flight is scheduled to land at."},
         {"name": "aircraft_id", "type": "INTEGER", "doc": "Aircraft assigned to the flight."},
         {"name": "departs_at", "type": "TEXT", "doc": "Scheduled departure date and time in UTC, written as YYYY-MM-DD HH:MM."},
         {"name": "status", "type": "INTEGER", "doc": "Outcome code: 1 = landed at the planned airport, 2 = cancelled, 3 = diverted to another airport."},
-        {"name": "arr_delta", "type": "INTEGER", "doc": "Scheduled arrival time minus actual arrival time in minutes, so positive means early and negative means late; empty when the flight did not reach its planned airport."}
+        {"name": "arr_delta", "type": "INTEGER", "doc": "Scheduled arrival time minus actual arrival time in minutes, so positive means early and negative means late."}
       ],
       "rows": [
         [1, "TP1355", 1, 3, 1, "2027-01-05 06:30", 1, -12], [2, "TP0201", 1, 7, 5, "2027-01-08 10:15", 1, 14],
@@ -61,7 +61,7 @@
       "name": "passengers",
       "description": "One row per registered passenger.",
       "columns": [
-        {"name": "passenger_id", "type": "INTEGER", "pk": true, "doc": "Unique passenger identifier."},
+        {"name": "passenger_id", "type": "INTEGER", "pk": true, "doc": "Customer number of the passenger."},
         {"name": "name", "type": "TEXT", "doc": "Passenger full name."},
         {"name": "nationality", "type": "TEXT", "doc": "Nationality shown on the passport."},
         {"name": "birth_year", "type": "INTEGER", "doc": "Year of birth."},
@@ -80,7 +80,7 @@
       "name": "bookings",
       "description": "One row per ticket sold to a passenger for a flight.",
       "columns": [
-        {"name": "booking_id", "type": "INTEGER", "pk": true, "doc": "Unique ticket identifier."},
+        {"name": "booking_id", "type": "INTEGER", "pk": true, "doc": "Ticket reference number."},
         {"name": "passenger_id", "type": "INTEGER", "doc": "Passenger the ticket was issued to."},
         {"name": "flight_id", "type": "INTEGER", "doc": "Flight the ticket is for."},
         {"name": "cabin", "type": "INTEGER", "doc": "Cabin booked: 1 = economy, 2 = business, 3 = premium economy."},
@@ -150,7 +150,7 @@
         "sql": "SELECT o.code || '-' || d.code FROM bookings b JOIN flights f ON f.flight_id = b.flight_id JOIN airports o ON o.airport_id = f.origin_id JOIN airports d ON d.airport_id = f.dest_id GROUP BY f.origin_id, f.dest_id ORDER BY COUNT(*) DESC LIMIT 1"}
      ],
      "needs_columns": ["airports.code", "flights.origin_id", "flights.dest_id"],
-     "resolving_note": {"table": "flights", "text": "Unless stated otherwise, the busiest route is the one with the most scheduled flights."}},
+     "resolving_note": {"table": "flights", "text": "Route traffic is measured by the number of scheduled flights on the route."}},
     {"id": "a02", "text": "How many passengers are booked on our January flights?",
      "readings": [
        {"gloss": "each person counted once",
@@ -159,7 +159,7 @@
         "sql": "SELECT COUNT(*) FROM bookings b JOIN flights f ON f.flight_id = b.flight_id WHERE f.departs_at LIKE '2027-01%'"}
      ],
      "needs_columns": ["bookings.passenger_id", "flights.departs_at"],
-     "resolving_note": {"table": "bookings", "text": "Unless stated otherwise, passengers are counted as people, so someone holding several tickets counts once."}},
+     "resolving_note": {"table": "bookings", "text": "Passenger counts treat each person once, even when they hold several tickets."}},
     {"id": "a03", "text": "What does a ticket to Madrid cost?",
      "readings": [
        {"gloss": "average fare in euros",
@@ -168,7 +168,7 @@
         "sql": "SELECT MIN(b.fare) / 100.0 FROM bookings b JOIN flights f ON f.flight_id = b.flight_id JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'Madrid'"}
      ],
      "needs_columns": ["bookings.fare", "airports.city"],
-     "resolving_note": {"table": "bookings", "text": "Unless stated otherwise, what a ticket costs means the average fare paid."}},
+     "resolving_note": {"table": "bookings", "text": "The cost of a ticket to a city is quoted as the average fare actually paid."}},
     {"id": "a04", "text": "When was our most recent flight to Athens?",
      "readings": [
        {"gloss": "latest flight that was not cancelled",
@@ -177,7 +177,7 @@
         "sql": "SELECT MAX(f.departs_at) FROM flights f JOIN airports a ON a.airport_id = f.dest_id WHERE a.city = 'Athens'"}
      ],
      "needs_columns": ["flights.departs_at", "flights.status", "airports.city"],
-     "resolving_note": {"table": "flights", "text": "Unless stated otherwise, a cancelled flight does not count as a flight that took place."}},
+     "resolving_note": {"table": "flights", "text": "Cancelled flights are not counted as flights that took place."}},
     {"id": "a05", "text": "Who is our most loyal passenger?",
      "readings": [
        {"gloss": "highest loyalty points balance",
@@ -186,6 +186,6 @@
         "sql": "SELECT p.name FROM passengers p JOIN bookings b ON b.passenger_id = p.passenger_id GROUP BY p.passenger_id ORDER BY COUNT(*) DESC LIMIT 1"}
      ],
      "needs_columns": ["passengers.name", "passengers.points"],
-     "resolving_note": {"table": "passengers", "text": "Unless stated otherwise, the most loyal passenger is the one with the highest loyalty points balance."}}
+     "resolving_note": {"table": "passengers", "text": "Loyalty is judged by the size of the loyalty points balance."}}
   ]
 }

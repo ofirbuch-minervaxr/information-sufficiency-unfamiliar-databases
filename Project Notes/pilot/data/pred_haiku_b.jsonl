@@ -1,0 +1,48 @@
+{"jid": "j049", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "meaning of appointments.status codes (which code means patient did not show)"}
+{"jid": "j050", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j051", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j052", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no department or specialty column in doctors, so cardiologists cannot be identified"}
+{"jid": "j053", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j054", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no discount column in order_lines"}
+{"jid": "j055", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j056", "label": "AMBIGUOUS", "reason": "null", "missing": "spent = total invoiced (all states) vs amount actually paid (settled only)"}
+{"jid": "j057", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j058", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j059", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j060", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j061", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no order time column in orders, so 10 pm cannot be tested"}
+{"jid": "j062", "label": "AMBIGUOUS", "reason": "null", "missing": "most recent appointment's who = the patient who booked it vs the doctor it is with"}
+{"jid": "j063", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j064", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j065", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no amount column in invoices"}
+{"jid": "j066", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "whether order_lines.discount is an amount (and currency) or a percentage"}
+{"jid": "j067", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "meaning of orders.channel codes (which code is own website or app)"}
+{"jid": "j068", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j069", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "meaning of invoices.state codes (which code is paid in full)"}
+{"jid": "j070", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no status column in appointments, so no-show cannot be identified"}
+{"jid": "j071", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j072", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j073", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j074", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no role column in shifts, so bar staff cannot be identified"}
+{"jid": "j075", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j076", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j077", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j078", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j079", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j080", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "currency of invoices.amount (question asks in rand)"}
+{"jid": "j081", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "no dish name column, so Chilli Crab cannot be identified"}
+{"jid": "j082", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "whether menu_items.price includes tax (GST rate) and its currency"}
+{"jid": "j083", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j084", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j085", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "definition of the clinic financial year for invoices.issued_on"}
+{"jid": "j086", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j087", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j088", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j089", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "definition of busiest (orders count, items sold, or hours)"}
+{"jid": "j090", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j091", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "meaning of menu_items.allergens codes (which bit is shellfish)"}
+{"jid": "j092", "label": "NOT_ANSWERABLE", "reason": "NOT_PRESENT", "missing": "no amount column in invoices, so billed value cannot be summed"}
+{"jid": "j093", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j094", "label": "NOT_ANSWERABLE", "reason": "UNDERSPECIFIED", "missing": "meaning and unit of suppliers.reliability"}
+{"jid": "j095", "label": "ANSWERABLE", "reason": "null", "missing": ""}
+{"jid": "j096", "label": "ANSWERABLE", "reason": "null", "missing": ""}

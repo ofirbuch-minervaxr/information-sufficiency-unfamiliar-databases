@@ -6,7 +6,7 @@
       "name": "branches",
       "description": "One row per library branch in the network.",
       "columns": [
-        {"name": "branch_id", "type": "INTEGER", "pk": true, "doc": "Unique branch identifier."},
+        {"name": "branch_id", "type": "INTEGER", "pk": true, "doc": "Branch number used across the system."},
         {"name": "branch_name", "type": "TEXT", "doc": "Name the branch goes by."},
         {"name": "city", "type": "TEXT", "doc": "Town or city where the branch is located."},
         {"name": "opened", "type": "INTEGER", "doc": "Year the branch first opened to the public."},
@@ -24,7 +24,7 @@
       "name": "books",
       "description": "One row per book title in the catalogue.",
       "columns": [
-        {"name": "book_id", "type": "INTEGER", "pk": true, "doc": "Unique title identifier."},
+        {"name": "book_id", "type": "INTEGER", "pk": true, "doc": "Catalogue number of the title."},
         {"name": "title", "type": "TEXT", "doc": "Title of the book."},
         {"name": "author", "type": "TEXT", "doc": "Author's full name."},
         {"name": "category", "type": "INTEGER", "doc": "Shelving category: 1 = non-fiction, 2 = reference, 3 = adult fiction, 4 = children's."},
@@ -42,7 +42,7 @@
       "name": "copies",
       "description": "One row per physical copy of a book held by a branch.",
       "columns": [
-        {"name": "copy_id", "type": "INTEGER", "pk": true, "doc": "Unique copy identifier."},
+        {"name": "copy_id", "type": "INTEGER", "pk": true, "doc": "Barcode number of the physical copy."},
         {"name": "book_id", "type": "INTEGER", "doc": "Title this copy is a copy of."},
         {"name": "branch_id", "type": "INTEGER", "doc": "Branch the copy belongs to."},
         {"name": "condition", "type": "INTEGER", "doc": "Physical state of the copy: 1 = worn, 2 = withdrawn from stock, 3 = good, 4 = new."},
@@ -59,7 +59,7 @@
       "name": "members",
       "description": "One row per registered library member.",
       "columns": [
-        {"name": "member_id", "type": "INTEGER", "pk": true, "doc": "Unique member identifier."},
+        {"name": "member_id", "type": "INTEGER", "pk": true, "doc": "Library card number."},
         {"name": "full_name", "type": "TEXT", "doc": "Member's full name."},
         {"name": "kind", "type": "INTEGER", "doc": "Membership type: 1 = adult, 2 = junior (under 16), 3 = staff, 4 = senior (65 and over)."},
         {"name": "joined", "type": "TEXT", "doc": "Date the member first registered, written YYYY-MM-DD."},
@@ -76,7 +76,7 @@
       "name": "loans",
       "description": "One row per time a copy was lent to a member.",
       "columns": [
-        {"name": "loan_id", "type": "INTEGER", "pk": true, "doc": "Unique loan identifier."},
+        {"name": "loan_id", "type": "INTEGER", "pk": true, "doc": "Reference number of the loan."},
         {"name": "copy_id", "type": "INTEGER", "doc": "Copy that was lent out."},
         {"name": "member_id", "type": "INTEGER", "doc": "Member who borrowed the copy."},
         {"name": "loaned_on", "type": "TEXT", "doc": "Date the copy was lent out, written YYYY-MM-DD."},
@@ -96,7 +96,7 @@
       "name": "fines",
       "description": "One row per fine charged against a loan.",
       "columns": [
-        {"name": "fine_id", "type": "INTEGER", "pk": true, "doc": "Unique fine identifier."},
+        {"name": "fine_id", "type": "INTEGER", "pk": true, "doc": "Reference number of the fine."},
         {"name": "loan_id", "type": "INTEGER", "doc": "Loan the fine was charged for."},
         {"name": "reason", "type": "INTEGER", "doc": "Why the fine was charged: 1 = damaged copy, 2 = overdue return."},
         {"name": "amount", "type": "INTEGER", "doc": "Fine charged, in pence."},
@@ -153,5 +153,51 @@
      "needs_columns": ["loans.returned_on"],
      "needs_docs": [{"column": "loans.returned_on", "fact": "the date 9999-12-31 is a placeholder meaning the copy has not been returned yet"}]}
   ],
-  "ambiguous": []
+  "ambiguous": [
+    {"id": "a01", "text": "Which branch is the most heavily used?",
+     "readings": [
+       {"gloss": "its copies were lent out the most times",
+        "sql": "SELECT b.branch_name FROM loans l JOIN copies c ON c.copy_id = l.copy_id JOIN branches b ON b.branch_id = c.branch_id GROUP BY b.branch_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "most visitors through the door",
+        "sql": "SELECT branch_name FROM branches ORDER BY visitors DESC LIMIT 1"}
+     ],
+     "needs_columns": ["branches.branch_name", "branches.visitors"],
+     "resolving_note": {"table": "branches", "text": "Branch usage is judged by how many times its copies are lent out."}},
+    {"id": "a02", "text": "What is our most popular book?",
+     "readings": [
+       {"gloss": "lent out the most times",
+        "sql": "SELECT bk.title FROM loans l JOIN copies c ON c.copy_id = l.copy_id JOIN books bk ON bk.book_id = c.book_id GROUP BY bk.book_id ORDER BY COUNT(*) DESC LIMIT 1"},
+       {"gloss": "borrowed by the most different members",
+        "sql": "SELECT bk.title FROM loans l JOIN copies c ON c.copy_id = l.copy_id JOIN books bk ON bk.book_id = c.book_id GROUP BY bk.book_id ORDER BY COUNT(DISTINCT l.member_id) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["books.title", "loans.member_id"],
+     "resolving_note": {"table": "books", "text": "A book's popularity is its total number of loans, regardless of who borrowed it."}},
+    {"id": "a03", "text": "How much money do we make from fines?",
+     "readings": [
+       {"gloss": "only fines that were paid, in pounds",
+        "sql": "SELECT SUM(amount) / 100.0 FROM fines WHERE state = 3"},
+       {"gloss": "all fines charged, in pounds",
+        "sql": "SELECT SUM(amount) / 100.0 FROM fines"}
+     ],
+     "needs_columns": ["fines.amount", "fines.state"],
+     "resolving_note": {"table": "fines", "text": "Income from fines means the fines that members have actually paid."}},
+    {"id": "a04", "text": "Name our largest branch.",
+     "readings": [
+       {"gloss": "most public floor space",
+        "sql": "SELECT branch_name FROM branches ORDER BY floor_area DESC LIMIT 1"},
+       {"gloss": "holds the most copies",
+        "sql": "SELECT b.branch_name FROM copies c JOIN branches b ON b.branch_id = c.branch_id GROUP BY b.branch_id ORDER BY COUNT(*) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["branches.branch_name", "branches.floor_area"],
+     "resolving_note": {"table": "branches", "text": "A branch's size is its public floor space."}},
+    {"id": "a05", "text": "Which book in our collection is the oldest?",
+     "readings": [
+       {"gloss": "earliest publication year",
+        "sql": "SELECT title FROM books ORDER BY pub_year ASC LIMIT 1"},
+       {"gloss": "copy held by the library the longest",
+        "sql": "SELECT bk.title FROM copies c JOIN books bk ON bk.book_id = c.book_id ORDER BY c.acquired_on ASC LIMIT 1"}
+     ],
+     "needs_columns": ["books.title", "books.pub_year", "copies.acquired_on"],
+     "resolving_note": {"table": "books", "text": "A book's age is counted from its publication year."}}
+  ]
 }
