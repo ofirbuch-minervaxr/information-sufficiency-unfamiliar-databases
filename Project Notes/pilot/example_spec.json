@@ -1,0 +1,62 @@
+{
+  "db_id": "mini_shop",
+  "domain": "small online shop",
+  "tables": [
+    {
+      "name": "customers",
+      "description": "One row per registered customer.",
+      "columns": [
+        {"name": "customer_id", "type": "INTEGER", "pk": true, "doc": "Unique customer identifier."},
+        {"name": "name", "type": "TEXT", "doc": "Customer full name."},
+        {"name": "city", "type": "TEXT", "doc": "City of residence."},
+        {"name": "segment", "type": "TEXT", "doc": "Marketing segment label."}
+      ],
+      "rows": [
+        [1, "Dana", "Haifa", "gold"], [2, "Omer", "Haifa", "basic"], [3, "Lior", "Tel Aviv", "basic"],
+        [4, "Noa", "Jerusalem", "gold"], [5, "Yossi", "Haifa", "basic"], [6, "Maya", "Tel Aviv", "gold"]
+      ]
+    },
+    {
+      "name": "orders",
+      "description": "One row per order placed by a customer.",
+      "columns": [
+        {"name": "order_id", "type": "INTEGER", "pk": true, "doc": "Unique order identifier."},
+        {"name": "customer_id", "type": "INTEGER", "doc": "The customer who placed the order."},
+        {"name": "status", "type": "INTEGER", "doc": "Order state code: 1 = placed, 2 = shipped, 3 = returned."},
+        {"name": "amount", "type": "REAL", "doc": "Order value in US dollars, excluding tax."},
+        {"name": "ordered_on", "type": "TEXT", "doc": "Order date in YYYY-MM-DD format."}
+      ],
+      "rows": [
+        [1, 1, 3, 120.0, "2026-01-05"], [2, 1, 2, 80.0, "2026-02-11"], [3, 2, 2, 60.0, "2026-02-12"],
+        [4, 2, 3, 45.0, "2026-03-01"], [5, 2, 2, 30.0, "2026-03-15"], [6, 3, 1, 210.0, "2026-04-02"],
+        [7, 4, 2, 75.0, "2025-12-20"], [8, 4, 3, 55.0, "2026-01-22"], [9, 5, 2, 40.0, "2026-05-09"],
+        [10, 6, 1, 95.0, "2026-05-10"]
+      ]
+    }
+  ],
+  "foreign_keys": [["orders.customer_id", "customers.customer_id"]],
+  "questions": [
+    {"id": "q01", "text": "How many customers live in Haifa?",
+     "sql": "SELECT COUNT(*) FROM customers WHERE city = 'Haifa'",
+     "needs_columns": ["customers.city"], "needs_docs": []},
+    {"id": "q02", "text": "How many orders were sent back by customers?",
+     "sql": "SELECT COUNT(*) FROM orders WHERE status = 3",
+     "needs_columns": ["orders.status"],
+     "needs_docs": [{"column": "orders.status", "fact": "code 3 means the order was returned"}]},
+    {"id": "q03", "text": "What was the total order value in dollars during 2026?",
+     "sql": "SELECT SUM(amount) FROM orders WHERE ordered_on LIKE '2026%'",
+     "needs_columns": ["orders.amount", "orders.ordered_on"],
+     "needs_docs": [{"column": "orders.amount", "fact": "amount is in US dollars"}]}
+  ],
+  "ambiguous": [
+    {"id": "a01", "text": "Who is our top customer?",
+     "readings": [
+       {"gloss": "highest total order amount",
+        "sql": "SELECT c.name FROM customers c JOIN orders o ON o.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY SUM(o.amount) DESC LIMIT 1"},
+       {"gloss": "largest number of orders",
+        "sql": "SELECT c.name FROM customers c JOIN orders o ON o.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY COUNT(*) DESC LIMIT 1"}
+     ],
+     "needs_columns": ["orders.amount", "orders.customer_id"],
+     "resolving_note": {"table": "orders", "text": "Unless stated otherwise, the top customer means the one with the highest total order amount."}}
+  ]
+}
